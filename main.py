@@ -87,7 +87,7 @@ params:
 output: 
 - print in format as seen in specification
 """
-def print_roundtrip(roundtrip, output_file): 
+def print_roundtrip(roundtrip, speed, output_file): 
     output = []
     # sliding window of two sets at a time
     for edge1, edge2 in zip(roundtrip, roundtrip[1:]): 
@@ -107,9 +107,10 @@ def print_roundtrip(roundtrip, output_file):
             row = locs_df.loc[(locs_df["locationA"] == output[i-1]) & (locs_df["locationB"] == output[i])]
             if row is None: 
                 row = locs_df.loc[(locs_df["locationA"] == output[i]) & (locs_df["locationB"] == output[i-1])]
-            edge_labl = row["edgeLabel"]
-            f.write(output[i-1] + "," + output[i] + "," + output[i-1] + "," + output[i])
-
+            edge_label = row["edgeLabel"]
+            f.write(output[i-1] + "," + output[i] + "," + edge_label + "," + get_edge_pref(frozenset([output[i-1], output[i]])) + "," + 
+                    edge_map[frozenset([output[i-1], output[i]])]/speed + "," + loc_prefs[output[i]] + "," + time_at_location(output[i]) + "\n")
+        f.write("\n")
 
 # Highest level round trip road trip function 
 def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
@@ -167,7 +168,7 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
         for neighbor in adjacency_list[curr_loc]: 
             new_roadtrip = curr_roadtrip.copy()
             new_roadtrip.append(frozenset([curr_loc, neighbor]))
-            pq.put((-1*total_preference(new_roadtrip), new_roadtrip, time_estimate(new_roadtrip, x_mph)))
+            pq.put((total_preference(new_roadtrip), new_roadtrip, time_estimate(new_roadtrip, x_mph)))
 
 def main(): 
     RoundTripRoadTrip("NashvilleTN", "road_network_locs.csv", "road_network_edges.csv", 10, 50, "result.csv")
