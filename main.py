@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from queue import PriorityQueue
+import time 
 
 # global variable: edge_map is a dictionary mapping out the edges as sets to their distances 
 edge_map = dict() 
@@ -104,6 +105,7 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
     # read in the csv files and construct edge_map 
     locs_df = pd.read_csv(locFile)
     edges_df = pd.read_csv(edgeFile)
+    edges_df = edges_df[(edges_df["actualDistance"] > 50) & (edges_df["actualDistance"] < 200)]
 
     locA = edges_df["locationA"]
     locB = edges_df["locationB"]
@@ -137,6 +139,7 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
 
     # do priority search 
     pq = PriorityQueue()
+    start_time = time.time() 
     pq.put((loc_prefs[startLoc], [frozenset(startLoc)], 0))
 
     while pq.qsize() > 0: 
