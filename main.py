@@ -25,6 +25,9 @@ def edge_preference_assignments(a=0, b=0.1):
         edge_prefs[edges] = np.random.uniform(a, b)
     return edge_prefs
 
+# a function for getting preference of edge depending on if it's a self edge or not 
+def get_edge_pref(edge): 
+    return edge_prefs[edge] if len(edge_prefs) == 2 else 0
 """
 total_preference
 
@@ -45,7 +48,7 @@ def total_preference(roadtrip):
         locs.update(edge)
 
         # do lookup for edge and add to total value
-        total_edge_val += edge_prefs[edge]
+        total_edge_val += get_edge_pref(edge)
 
     locs_list = list(locs)
     for loc in locs_list: 
@@ -67,11 +70,12 @@ def time_estimate(roadtrip, x):
     total_time = 0 
     for edge in roadtrip: 
         unique_locations.update(edge)
-        total_time += (edge_map[edge] / x)
+        total_time += (edge_map[edge] / x) + time_at_location(get_edge_pref(edge))
     
-    loc_add, edge_add = total_preference(roadtrip)
+    for loc in unique_locations: 
+        total_time += time_at_location(loc_prefs[loc])
 
-    return total_time + loc_add + edge_add
+    return total_time 
 
 # Highest level round trip road trip function 
 def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
@@ -92,15 +96,7 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
         dist_A_B = edges_df["actualDistance"][i]
         path = frozenset([A, B])
         edge_map[path] = dist_A_B
-
-    # assign preference values 
-    location_preference_assignments(0, 1)
-    edge_preference_assignments(0, 0.1)
-
-
-def main(): 
-    RoundTripRoadTrip("NashvilleTN", "road_network_locs.csv", "road_network_edges.csv", 10, 50, "result.csv")
-
+    
     # parse edge_map into bidirectional adjacency_list
     for edge in edge_map:
         locA, locB = edge
@@ -114,11 +110,19 @@ def main():
             adjacency_list[locB] = [locA]
         else:
             adjacency_list[locB].append(locA)  
-
-    pq = PriorityQueue()
-
-    # add start vertex to pq
     
+    # assign preference values 
+    location_preference_assignments(0, 1)
+    edge_preference_assignments(0, 0.1)
+
+    # do priority search 
+    pq = PriorityQueue()
+    pq.put((0, [startLoc]))
+
+def main(): 
+    RoundTripRoadTrip("NashvilleTN", "road_network_locs.csv", "road_network_edges.csv", 10, 50, "result.csv")
+
+
 
 
     ''' 
