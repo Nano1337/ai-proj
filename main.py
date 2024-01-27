@@ -1,6 +1,20 @@
 import pandas as pd
 import numpy as np
 
+"""
+total_preference
+params: 
+    - roadtrip: list of sets with each set representing an undirected edge
+"""
+def total_preference(roadtrip): 
+    locs = set()
+    
+    # call preference edge and vertex list from 2a and 2b
+
+    for s in roadtrip: 
+        
+
+
 def main(): 
     locs_df = pd.read_csv("road_network_locs.csv")
     edges_df = pd.read_csv("road_network_edges.csv")
