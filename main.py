@@ -1,3 +1,19 @@
+"""
+Team Members (Group 3):
+- Haoli Yin
+- Lydia Liu
+- Richard Song
+- Shreya Reddy
+
+How to Run Code:
+TODO: XXXXXXXX
+
+Search Strategy:
+Our code implements a utility-driven search using a priority queue, where the search prioritizes
+paths using the total_preference as the heuristic value. The time_estimate function works to filter
+out routes that take longer than the specified maxTime. The algorithm aims to maximize the overall
+preference of the roadtrip within the given time constraints. 
+"""
 import pandas as pd
 import numpy as np
 from queue import PriorityQueue
@@ -12,7 +28,15 @@ edge_prefs = {}
 locs_df = None
 edges_df = None
 
-# Assign preference values between 0 and 1 for each location
+"""
+location_preference_assignments
+
+params: 
+    - a: lower bound of assigned location preference values (default = 0)
+    - b: upper bound of assigned location preference values (default = 1)
+returns: 
+    - dict assignment of all location preference values
+"""
 def location_preference_assignments(a, b):
     global locations, loc_prefs
     loc_prefs = {}
@@ -20,7 +44,15 @@ def location_preference_assignments(a, b):
         loc_prefs[loc] = np.random.uniform(a, b)
     return loc_prefs
 
-#Assigns random values between a=0 and b=0.1 inclusive using a uniform distribution to each edge independently
+"""
+edge_preference_assignments
+
+params: 
+    - a: lower bound of assigned edge preference values (default = 0)
+    - b: upper bound of assigned edge preference values (default = 0.1)
+returns: 
+    - dict assignment of all edge preference values
+"""
 def edge_preference_assignments(a=0, b=0.1):
     global edge_map, edge_prefs
     edge_prefs = {}
@@ -28,16 +60,24 @@ def edge_preference_assignments(a=0, b=0.1):
         edge_prefs[edges] = np.random.uniform(a, b)
     return edge_prefs
 
-# a function for getting preference of edge depending on if it's a self edge or not 
+"""
+get_edge_pref
+
+params: 
+    - edge: individual edge within the roadtrip
+returns: 
+    - preference of edge depending on if it's a self edge or not, else 0
+"""
 def get_edge_pref(edge): 
     return edge_prefs[edge] if len(edge_prefs) == 2 else 0
+
 """
 total_preference
 
 params: 
     - roadtrip: list of sets with each set representing an undirected edge
 returns: 
-    - total preference value of locations and edges, respectively 
+    - total sum of all location and all edge preferences in a road trip
 """
 def total_preference(roadtrip): 
     locs = set()
@@ -59,13 +99,26 @@ def total_preference(roadtrip):
 
     return total_loc_val, total_edge_val
 
-# The time spent at a location as a function of its preference 
+"""
+time_at_location
+
+params:
+    - vloc: preference value of a location
+returns:
+    - time spent at a location as a function of its preference
+""" 
 def time_at_location (vloc): 
     return vloc * 10 
 
-'''
-roadtrip is a list of edges, which are represented as fixedsets of locations
-'''
+"""
+time_estimate
+
+params: 
+    - roadtrip: list of edges, which are represented as fixedsets of locations
+    - x: assumed travel speed (in mph) of all edges 
+returns: 
+    - total time required by a road trip in terms of its constituent edges and locations
+"""
 def time_estimate(roadtrip, x):
     unique_locations = set()
     total_time = 0 
@@ -84,10 +137,10 @@ def time_estimate(roadtrip, x):
 print_roundtrip
 
 params: 
-- roundtrip: solution roundtrip stored as list of frozensets
-- output_file: name of output file to write to
-output: 
-- print in format as seen in specification
+    - roundtrip: solution roundtrip stored as list of frozensets
+    - output_file: name of output file to write to
+returns: 
+    - print in format as seen in specification
 """
 def print_roundtrip(output, speed, output_file): 
     '''
@@ -127,7 +180,17 @@ def print_roundtrip(output, speed, output_file):
             #         str(edge_map[frozenset([output[i-1], output[i]])]/speed) + "," + str(loc_prefs[output[i]]) + "," + str(time_at_location(output[i])) + "\n")
         #f.write("\n")
 
-# Highest level round trip road trip function 
+"""
+RoundTripRoadTrip
+
+params: 
+    - startLoc: start (and end)location of the round trip
+    - locFile: csv file of each location and their respective latitude, longitude, contributer, and notes
+    - edgeFile: csv file of each edge between locations and their respective actualDistance, contributer, and notes
+    - maxTime: the maximum amount of time (in hours) that the roadtrip cannot exceed
+    - x_mph: assumed travel speed (in mph) of all edges 
+    - resultFile: solution path and summary of the entire roadtrip
+"""
 def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
     global edge_map, locations, loc_prefs, edge_prefs, locs_df, edges_df, adjacency_list
 
@@ -219,3 +282,12 @@ def main():
 
 if __name__ == "__main__": 
     main()
+
+"""
+Qualitative Comments:
+TODO: XXXXXXXXX
+
+Quantitative Summary:
+TODO: XXXXXXXXX
+
+"""    
