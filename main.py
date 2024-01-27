@@ -70,8 +70,10 @@ def time_estimate(roadtrip, x):
     unique_locations = set()
     total_time = 0 
     for edge in roadtrip: 
-        unique_locations.update(edge)
-        total_time += (edge_map[edge] / x) + time_at_location(get_edge_pref(edge))
+        edge_length = 0 if len(edge) == 1 else edge_map[edge]
+        if len(edge) == 1:
+            unique_locations.update(edge)
+        total_time += (edge_length / x) + time_at_location(get_edge_pref(edge))
     
     for loc in unique_locations: 
         total_time += time_at_location(loc_prefs[loc])
@@ -169,15 +171,17 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
             continue 
 
         curr_loc = list(curr_roadtrip[-1])[-1]
-        print(elt)
+        #print(elt)
 
         if (curr_loc == startLoc and len(curr_roadtrip) > 1):
+            print("reached")
             print_roundtrip(curr_roadtrip, x_mph, resultFile)   
-            if (input("Should another solution be returned?") == "yes"):
-                continue 
-            else:
-                current_time = time.time() 
-                break 
+            
+            # if (input("Should another solution be returned?") == "yes"):
+            #     continue 
+            # else:
+            #     current_time = time.time() 
+            #     break 
 
         for neighbor in adjacency_list[curr_loc]: 
             new_roadtrip = curr_roadtrip.copy()
