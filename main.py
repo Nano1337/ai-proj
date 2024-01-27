@@ -14,6 +14,40 @@ def location_preference_assignments(a, b):
         loc_prefs[loc] = np.random.uniform(a, b)
     return loc_prefs
 
+"""
+total_preference
+
+params: 
+    - roadtrip: list of sets with each set representing an undirected edge
+returns: 
+    - total preference value of locations and edges, respectively 
+"""
+def total_preference(roadtrip): 
+    locs = set()
+    
+    # call preference edge and vertex list from 2a and 2b
+    edge_dict = None # FIXME: use global edge preference map here
+    loc_dict = loc_prefs
+
+    total_loc_val = 0
+    total_edge_val = 0
+
+    for edge in roadtrip: 
+
+        # add vertices to set
+        locs.add(edge[0])
+        locs.add(edge[1])
+
+        # do lookup for edge and add to total value
+        total_edge_val += edge_dict[edge]
+
+    locs_list = list(locs)
+    for loc in locs_list: 
+        total_loc_val += loc_dict[loc]
+
+    return total_loc_val, total_edge_val
+
+
 
 '''
 roadtrip is a list of edges, which are represented as fixedsets of locations
