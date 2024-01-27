@@ -59,7 +59,7 @@ roadtrip is a list of edges, which are represented as fixedsets of locations
 def time_estimate(roadtrip, x):
     # The time spent at a location as a function of its preference 
     def time_at_location (vloc): 
-        return vloc 
+        return vloc * 100 
     
     unique_locations = set()
     total_time = 0 
