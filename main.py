@@ -3,7 +3,17 @@ import numpy as np
 
 # global variable: edge_map is a dictionary mapping out the edges as sets to their distances 
 edge_map = dict() 
-locations = list() 
+locations = list()
+loc_prefs= {} 
+
+# Assign preference values between 0 and 1 for each location
+def location_preference_assignments(a, b):
+    global locations, loc_prefs
+    loc_prefs = {}
+    for loc in locations:
+        loc_prefs[loc] = np.random.uniform(a, b)
+    return loc_prefs
+
 
 def time_estimate(roadtrip, x):
 
