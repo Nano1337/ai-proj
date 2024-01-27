@@ -5,6 +5,7 @@ import numpy as np
 edge_map = dict() 
 locations = list()
 loc_prefs= {} 
+edge_prefs = {}
 
 # Assign preference values between 0 and 1 for each location
 def location_preference_assignments(a, b):
@@ -13,6 +14,14 @@ def location_preference_assignments(a, b):
     for loc in locations:
         loc_prefs[loc] = np.random.uniform(a, b)
     return loc_prefs
+
+#Assigns random values between a=0 and b=0.1 inclusive using a uniform distribution to each edge independently
+def edge_preference_assignments(a=0, b=0.1):
+    global edge_map, edge_prefs
+    edge_prefs = {}
+    for edges in edge_map:
+        edge_prefs[edges] = np.random.uniform(a, b)
+    return edge_prefs
 
 """
 total_preference
@@ -24,10 +33,6 @@ returns:
 """
 def total_preference(roadtrip): 
     locs = set()
-    
-    # call preference edge and vertex list from 2a and 2b
-    edge_dict = None # FIXME: use global edge preference map here
-    loc_dict = loc_prefs
 
     total_loc_val = 0
     total_edge_val = 0
@@ -39,11 +44,11 @@ def total_preference(roadtrip):
         locs.add(edge[1])
 
         # do lookup for edge and add to total value
-        total_edge_val += edge_dict[edge]
+        total_edge_val += edge_prefs[edge]
 
     locs_list = list(locs)
     for loc in locs_list: 
-        total_loc_val += loc_dict[loc]
+        total_loc_val += loc_prefs[loc]
 
     return total_loc_val, total_edge_val
 
@@ -66,9 +71,8 @@ def time_estimate(roadtrip, x):
             (edge_map[edge] / x) +
             time_at_location(loc_prefs[edge[0]]) +
             time_at_location(loc_prefs[edge[1]]) +
-            time_at_location(edge_prefs[edge])
+            time_at_location(edge_prefs[edge]))
     return total_time
-)
 
 def main(): 
     # read in the csv files and construct edge_map 
