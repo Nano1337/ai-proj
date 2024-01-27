@@ -56,14 +56,14 @@ def total_preference(roadtrip):
 
     return total_loc_val, total_edge_val
 
+# The time spent at a location as a function of its preference 
+def time_at_location (vloc): 
+    return vloc * 100 
+
 '''
 roadtrip is a list of edges, which are represented as fixedsets of locations
 '''
 def time_estimate(roadtrip, x):
-    # The time spent at a location as a function of its preference 
-    def time_at_location (vloc): 
-        return vloc * 100 
-    
     unique_locations = set()
     total_time = 0 
     for edge in roadtrip: 
@@ -132,7 +132,7 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
         elt = pq.get()
         curr_roadtrip = elt[1]
 
-        if time_estimate(curr_roadtrip, x_mph) > maxTime: 
+        if elt[2] > maxTime: 
             continue 
 
         curr_loc = list(curr_roadtrip[-1])[-1]
