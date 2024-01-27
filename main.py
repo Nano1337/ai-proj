@@ -67,6 +67,7 @@ def time_estimate(roadtrip, x):
             time_at_location(loc_prefs[edge[0]]) +
             time_at_location(loc_prefs[edge[1]]) +
             time_at_location(edge_prefs[edge])
+    return total_time
 )
 
 def main(): 
