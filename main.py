@@ -5,9 +5,25 @@ import numpy as np
 edge_map = dict() 
 locations = list() 
 
+'''
+roadtrip is a list of edges, which are represented as fixedsets of locations
+'''
 def time_estimate(roadtrip, x):
-
-    pass
+    # The time spent at a location as a function of its preference 
+    def time_at_location (vloc): 
+        return vloc 
+    
+    unique_locations = set()
+    total_time = 0 
+    for edge in roadtrip: 
+        unique_locations.add(edge[0])
+        unique_locations.add(edge[1])
+        total_time += (
+            (edge_map[edge] / x) +
+            time_at_location(loc_prefs[edge[0]]) +
+            time_at_location(loc_prefs[edge[1]]) +
+            time_at_location(edge_prefs[edge])
+)
 
 def main(): 
     # read in the csv files and construct edge_map 
