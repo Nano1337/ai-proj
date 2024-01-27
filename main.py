@@ -121,7 +121,7 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
         elt = pq.get()
         curr_roadtrip = elt[1]
 
-        if time_estimate(curr_roadtrip, x_mph) > maxTime: 
+        if elt[2] > maxTime: 
             continue 
 
         curr_loc = list(curr_roadtrip[-1])[-1]
