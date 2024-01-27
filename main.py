@@ -118,7 +118,7 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
     # do priority search 
     pq = PriorityQueue()
     start_time = time.time() 
-    pq.put((loc_prefs[startLoc], [frozenset(startLoc)], 0))
+    pq.put((-1*loc_prefs[startLoc], [frozenset(startLoc)], 0))
 
     while pq.qsize() > 0: 
         elt = pq.get()
@@ -132,7 +132,7 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
         for neighbor in adjacency_list[curr_loc]: 
             new_roadtrip = curr_roadtrip.copy()
             new_roadtrip.append(frozenset([curr_loc, neighbor]))
-            pq.put((total_preference(new_roadtrip), new_roadtrip, time_estimate(new_roadtrip, x_mph)))
+            pq.put((-1*total_preference(new_roadtrip), new_roadtrip, time_estimate(new_roadtrip, x_mph)))
 
 def main(): 
     RoundTripRoadTrip("NashvilleTN", "road_network_locs.csv", "road_network_edges.csv", 10, 50, "result.csv")
