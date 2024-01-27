@@ -4,6 +4,7 @@ import numpy as np
 # global variable: edge_map is a dictionary mapping out the edges as sets to their distances 
 edge_map = dict() 
 locations = list()
+adjacency_list = {}
 loc_prefs= {} 
 edge_prefs = {}
 
@@ -98,6 +99,21 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
 
 def main(): 
     RoundTripRoadTrip("NashvilleTN", "road_network_locs.csv", "road_network_edges.csv", 10, 50, "result.csv")
+
+    # parse edge_map into bidirectional adjacency_list
+    for edge in edge_map:
+        locA, locB = edge
+
+        if locA not in adjacency_list:
+            adjacency_list[locA] = [locB]
+        else:
+            adjacency_list[locA].append(locB)
+
+        if locB not in adjacency_list:
+            adjacency_list[locB] = [locA]
+        else:
+            adjacency_list[locB].append(locA)  
+
 
     ''' 
     random test 
