@@ -71,11 +71,13 @@ def time_estimate(roadtrip, x):
 
     return total_time + loc_add + edge_add
 
-def main(): 
+# Highest level round trip road trip function 
+def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
     global edge_map, locations, loc_prefs, edge_prefs
+
     # read in the csv files and construct edge_map 
-    locs_df = pd.read_csv("road_network_locs.csv")
-    edges_df = pd.read_csv("road_network_edges.csv")
+    locs_df = pd.read_csv(locFile)
+    edges_df = pd.read_csv(edgeFile)
 
     locA = edges_df["locationA"]
     locB = edges_df["locationB"]
@@ -88,7 +90,14 @@ def main():
         dist_A_B = edges_df["actualDistance"][i]
         path = frozenset([A, B])
         edge_map[path] = dist_A_B
-    
+
+    # assign preference values 
+    location_preference_assignments(0, 1)
+    edge_preference_assignments(0, 0.1)
+
+
+def main(): 
+    RoundTripRoadTrip("NashvilleTN", "road_network_locs.csv", "road_network_edges.csv", 10, 50, "result.csv")
 
     ''' 
     random test 
