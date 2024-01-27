@@ -75,6 +75,17 @@ def time_estimate(roadtrip, x):
 
     return total_time 
 
+"""
+print_roundtrip
+
+params: 
+- roundtrip: solution roundtrip stored as list of frozensets
+output: 
+- print
+"""
+def print_roundtrip(roundtrip): 
+
+
 # Highest level round trip road trip function 
 def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
     global edge_map, locations, loc_prefs, edge_prefs
