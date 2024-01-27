@@ -5,6 +5,7 @@ import numpy as np
 edge_map = dict() 
 locations = list()
 loc_prefs= {} 
+edge_prefs = {}
 
 # Assign preference values between 0 and 1 for each location
 def location_preference_assignments(a, b):
@@ -13,6 +14,14 @@ def location_preference_assignments(a, b):
     for loc in locations:
         loc_prefs[loc] = np.random.uniform(a, b)
     return loc_prefs
+
+#Assigns random values between a=0 and b=0.1 inclusive using a uniform distribution to each edge independently
+def edge_preference_assignments(a=0, b=0.1):
+    global edge_map, edge_prefs
+    edge_prefs = {}
+    for edges in edge_map:
+        edge_prefs[edges] = np.random.uniform(a, b)
+    return edge_prefs
 
 """
 total_preference
