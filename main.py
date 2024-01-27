@@ -39,9 +39,8 @@ def total_preference(roadtrip):
 
     for edge in roadtrip: 
 
-        # add vertices to set
-        locs.add(edge[0])
-        locs.add(edge[1])
+        # add vertices to set to avoid redundancies 
+        locs.update(edge)
 
         # do lookup for edge and add to total value
         total_edge_val += edge_prefs[edge]
@@ -65,16 +64,15 @@ def time_estimate(roadtrip, x):
     unique_locations = set()
     total_time = 0 
     for edge in roadtrip: 
-        unique_locations.add(edge[0])
-        unique_locations.add(edge[1])
-        total_time += (
-            (edge_map[edge] / x) +
-            time_at_location(loc_prefs[edge[0]]) +
-            time_at_location(loc_prefs[edge[1]]) +
-            time_at_location(edge_prefs[edge]))
-    return total_time
+        unique_locations.update(edge)
+        total_time += (edge_map[edge] / x)
+    
+    loc_add, edge_add = total_preference(roadtrip)
+
+    return total_time + loc_add + edge_add
 
 def main(): 
+    global edge_map, locations, loc_prefs, edge_prefs
     # read in the csv files and construct edge_map 
     locs_df = pd.read_csv("road_network_locs.csv")
     edges_df = pd.read_csv("road_network_edges.csv")
@@ -90,7 +88,25 @@ def main():
         dist_A_B = edges_df["actualDistance"][i]
         path = frozenset([A, B])
         edge_map[path] = dist_A_B
-    pass
+    
+
+    ''' 
+    random test 
+
+    loc_prefs = location_preference_assignments(0, 1)
+    edge_prefs = edge_preference_assignments(0, 1)
+
+    fake_roadtrip = [frozenset(["NashvilleTN", "JacksonTN"]), frozenset(["JacksonTN", "MemphisTN"]), frozenset(["NashvilleTN", "BowlingGreenKY"])]
+    print(total_preference(fake_roadtrip))
+    print(time_estimate(fake_roadtrip, 50))
+    print(loc_prefs["NashvilleTN"])
+    print(loc_prefs["JacksonTN"])
+    print(loc_prefs["MemphisTN"])
+    print(loc_prefs["BowlingGreenKY"])
+    print(edge_prefs[frozenset(["NashvilleTN", "JacksonTN"])])
+    print(edge_prefs[frozenset(["JacksonTN", "MemphisTN"])])
+    print(edge_prefs[frozenset(["NashvilleTN", "BowlingGreenKY"])])
+    '''
 
 if __name__ == "__main__": 
     main()
