@@ -165,6 +165,12 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
 
         curr_loc = list(curr_roadtrip[-1])[-1]
 
+        if (curr_loc == startLoc and len(path) > 1):
+            if (input("Should another solution be returned?") == "yes"):
+                print_roundtrip(curr_roadtrip, x_mph, resultFile)
+            else:
+                pass #exit
+
         for neighbor in adjacency_list[curr_loc]: 
             new_roadtrip = curr_roadtrip.copy()
             new_roadtrip.append(frozenset([curr_loc, neighbor]))
