@@ -61,7 +61,7 @@ def total_preference(roadtrip):
 
 # The time spent at a location as a function of its preference 
 def time_at_location (vloc): 
-    return vloc * 100 
+    return vloc * 10
 
 '''
 roadtrip is a list of edges, which are represented as fixedsets of locations
@@ -70,8 +70,10 @@ def time_estimate(roadtrip, x):
     unique_locations = set()
     total_time = 0 
     for edge in roadtrip: 
-        unique_locations.update(edge)
-        total_time += (edge_map[edge] / x) + time_at_location(get_edge_pref(edge))
+        edge_length = 0 if len(edge) == 1 else edge_map[edge]
+        if len(edge) == 1:
+            unique_locations.update(edge)
+        total_time += (edge_length / x) + time_at_location(get_edge_pref(edge))
     
     for loc in unique_locations: 
         total_time += time_at_location(loc_prefs[loc])
@@ -129,7 +131,6 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
     locB = list(edges_df["locationB"])
 
     locations = list(locs_df["Location Label"])
-
     
 
     for i in range(len(locA)): 
@@ -162,6 +163,7 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
     pq.put((-1*loc_prefs[startLoc], [frozenset([startLoc])], 0))
 
     while pq.qsize() > 0: 
+        print(list(pq.queue))
         elt = pq.get()
         curr_roadtrip = elt[1]
 
@@ -169,14 +171,17 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
             continue 
 
         curr_loc = list(curr_roadtrip[-1])[-1]
+        #print(elt)
 
         if (curr_loc == startLoc and len(curr_roadtrip) > 1):
+            print("reached")
             print_roundtrip(curr_roadtrip, x_mph, resultFile)   
-            if (input("Should another solution be returned?") == "yes"):
-                continue 
-            else:
-                current_time = time.time() 
-                break 
+            
+            # if (input("Should another solution be returned?") == "yes"):
+            #     continue 
+            # else:
+            #     current_time = time.time() 
+            #     break 
 
         for neighbor in adjacency_list[curr_loc]: 
             new_roadtrip = curr_roadtrip.copy()
