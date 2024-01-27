@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from queue import PriorityQueue
 
 # global variable: edge_map is a dictionary mapping out the edges as sets to their distances 
 edge_map = dict() 
@@ -113,6 +114,11 @@ def main():
             adjacency_list[locB] = [locA]
         else:
             adjacency_list[locB].append(locA)  
+
+    pq = PriorityQueue()
+
+    # add start vertex to pq
+    
 
 
     ''' 
