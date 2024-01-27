@@ -92,8 +92,7 @@ def print_roundtrip(roundtrip, speed, output_file):
     # sliding window of two sets at a time
 
     out_edge, out_set_intersection = None, None
-    print(roundtrip)
-    exit()
+
     for edge1, edge2 in zip(roundtrip, roundtrip[1:]): 
         set_intersection = edge1.intersection(edge2)
         if len(output) == 0: 
@@ -104,7 +103,6 @@ def print_roundtrip(roundtrip, speed, output_file):
 
     # append last vertex (which is also start vertex)
     output.append(list(out_edge-out_set_intersection)[0])
-    print(output)
 
     # write to the end of the output file 
     with open(output_file, "a") as f: 
@@ -171,7 +169,6 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
             continue 
 
         curr_loc = list(curr_roadtrip[-1])[-1]
-        print(elt)
 
         if (curr_loc == startLoc and len(curr_roadtrip) > 1):
             print_roundtrip(curr_roadtrip, x_mph, resultFile)   
