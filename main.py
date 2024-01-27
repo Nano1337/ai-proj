@@ -126,6 +126,8 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
 
     locations = list(locs_df["Location Label"])
 
+    
+
     for i in range(len(locA)): 
         A = locA[i]
         B = locB[i]
