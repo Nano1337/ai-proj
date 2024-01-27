@@ -56,8 +56,6 @@ def total_preference(roadtrip):
 
     return total_loc_val, total_edge_val
 
-
-
 '''
 roadtrip is a list of edges, which are represented as fixedsets of locations
 '''
@@ -117,7 +115,21 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
 
     # do priority search 
     pq = PriorityQueue()
-    pq.put((0, [startLoc]))
+    pq.put((loc_prefs[startLoc], [frozenset(startLoc)], 0))
+
+    while pq.qsize() > 0: 
+        elt = pq.get()
+        curr_roadtrip = elt[1]
+
+        if time_estimate(curr_roadtrip, x_mph) > maxTime: 
+            continue 
+
+        curr_loc = list(curr_roadtrip[-1])[-1]
+
+        for neighbor in adjacency_list[curr_loc]: 
+            new_roadtrip = curr_roadtrip.copy()
+            new_roadtrip.append(frozenset([curr_loc, neighbor]))
+            pq.put((total_preference(new_roadtrip), new_roadtrip, time_estimate(new_roadtrip, x_mph)))
 
 def main(): 
     RoundTripRoadTrip("NashvilleTN", "road_network_locs.csv", "road_network_edges.csv", 10, 50, "result.csv")
