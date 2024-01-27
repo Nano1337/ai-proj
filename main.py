@@ -174,7 +174,7 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
         for neighbor in adjacency_list[curr_loc]: 
             new_roadtrip = curr_roadtrip.copy()
             new_roadtrip.append(frozenset([curr_loc, neighbor]))
-            pq.put((total_preference(new_roadtrip), new_roadtrip, time_estimate(new_roadtrip, x_mph)))
+            pq.put((-1*total_preference(new_roadtrip), new_roadtrip, time_estimate(new_roadtrip, x_mph)))
 
 def main(): 
     RoundTripRoadTrip("NashvilleTN", "road_network_locs.csv", "road_network_edges.csv", 10, 50, "result.csv")
