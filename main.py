@@ -247,7 +247,7 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
         if elt[2] > maxTime: 
             continue 
 
-        curr_loc = list(curr_roadtrip[-1])[-1]
+        curr_loc = elt[3][-1]
         #print(elt)
 
         if (curr_loc == startLoc and len(curr_roadtrip) > 1):
@@ -261,15 +261,12 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
                 break 
 
         for neighbor in adjacency_list[curr_loc]: 
-            #print(neighbor)
             new_roadtrip = curr_roadtrip.copy()
             new_roadtrip.append(frozenset([curr_loc, neighbor]))
-            #print(-1*total_preference(new_roadtrip))
             pq.put((-1*total_preference(new_roadtrip), new_roadtrip, time_estimate(new_roadtrip, x_mph), elt[3] + [neighbor]))
-         
 
 def main(): 
-    RoundTripRoadTrip("NashvilleTN", "road_network_locs.csv", "road_network_edges.csv", 100, 50, "result.csv")
+    RoundTripRoadTrip("NashvilleTN", "road_network_locs.csv", "road_network_edges.csv", 20, 50, "result.csv")
 
     ''' 
     random test 
