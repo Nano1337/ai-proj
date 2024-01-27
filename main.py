@@ -76,6 +76,28 @@ def time_estimate(roadtrip, x):
 
     return total_time 
 
+"""
+print_roundtrip
+
+params: 
+- roundtrip: solution roundtrip stored as list of frozensets
+output: 
+- print in format as seen in specification
+"""
+def print_roundtrip(roundtrip): 
+    output = []
+    # sliding window of two sets at a time
+    for edge1, edge2 in zip(roundtrip, roundtrip[1:]): 
+        set_intersection = edge1.intersection(edge2)
+        if len(output) == 0: 
+            output.append(list(edge1 - set_intersection)[0])
+        output.append(list(set_intersection)[0])
+
+    # append last vertex (which is also start vertex)
+    output.append(list(edge2-set_intersection)[0])
+    print(output)
+
+
 # Highest level round trip road trip function 
 def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
     global edge_map, locations, loc_prefs, edge_prefs
@@ -110,7 +132,7 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
             adjacency_list[locB] = [locA]
         else:
             adjacency_list[locB].append(locA)  
-
+    
     # assign preference values 
     location_preference_assignments(0, 1)
     edge_preference_assignments(0, 0.1)
