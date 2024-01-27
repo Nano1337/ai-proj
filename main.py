@@ -69,7 +69,7 @@ returns:
     - preference of edge depending on if it's a self edge or not, else 0
 """
 def get_edge_pref(edge): 
-    return edge_prefs[edge] if len(edge_prefs) == 2 else 0
+    return 0 if len(edge) != 2 else edge_prefs[edge]
 
 """
 total_preference
@@ -97,7 +97,7 @@ def total_preference(roadtrip):
     for loc in locs_list: 
         total_loc_val += loc_prefs[loc]
 
-    return total_loc_val, total_edge_val
+    return total_loc_val + total_edge_val
 
 """
 time_at_location
@@ -168,12 +168,19 @@ def print_roundtrip(output, speed, output_file):
         for i in range(1, len(output)): 
             # find the index where loc_df["locationA"] is equal to output[i-1] and loc_df["locationB"] is equal to output[i]
             row = edges_df[(edges_df["locationA"] == output[i-1]) & (edges_df["locationB"] == output[i])]
-            if row is None: 
+            if row.shape[0] == 0: 
                 row = edges_df[(edges_df["locationA"] == output[i]) & (edges_df["locationB"] == output[i-1])]
-            edge_label = str(row["edgeLabel"])
-            print(output)
-            
-            print(f'{output[i-1]}, {output[i]}, {edge_label}, {get_edge_pref(frozenset([output[i-1], output[i]]))}, {edge_map[frozenset([output[i-1], output[i]])]/speed}, {loc_prefs[output[i]]}, {time_at_location(output[i])}')
+            edge_label = list(row["edgeLabel"])[0]
+            print("Output is ")
+            print(f'{output[i-1]}')
+            print(f'{output[i]}')
+            print(f'{edge_label}')
+            print(f'{get_edge_pref(frozenset([output[i-1], output[i]]))}')
+            print(f'{edge_map[frozenset([output[i-1], output[i]])]/speed}')
+            print(f'{loc_prefs[output[i]]}')
+            print(f'{time_at_location(loc_prefs[output[i]])}')
+
+            # print(f'{output[i-1]}, {output[i]}, {edge_label}, {get_edge_pref(frozenset([output[i-1], output[i]]))}, {edge_map[frozenset([output[i-1], output[i]])]/speed}, {loc_prefs[output[i]]}, {time_at_location(output[i])}')
             # print(output[i-1] + "," + output[i] + "," + edge_label + "," + str(get_edge_pref(frozenset([output[i-1], output[i]]))) + "," + 
             #         str(edge_map[frozenset([output[i-1], output[i]])]/speed) + "," + str(loc_prefs[output[i]]) + "," + str(time_at_location(output[i])) + "\n")
             # f.write(output[i-1] + "," + output[i] + "," + edge_label + "," + str(get_edge_pref(frozenset([output[i-1], output[i]]))) + "," + 
@@ -257,7 +264,9 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
             #print(neighbor)
             new_roadtrip = curr_roadtrip.copy()
             new_roadtrip.append(frozenset([curr_loc, neighbor]))
+            #print(-1*total_preference(new_roadtrip))
             pq.put((-1*total_preference(new_roadtrip), new_roadtrip, time_estimate(new_roadtrip, x_mph), elt[3] + [neighbor]))
+         
 
 def main(): 
     RoundTripRoadTrip("NashvilleTN", "road_network_locs.csv", "road_network_edges.csv", 100, 50, "result.csv")
