@@ -90,14 +90,20 @@ output:
 def print_roundtrip(roundtrip, speed, output_file): 
     output = []
     # sliding window of two sets at a time
+
+    out_edge, out_set_intersection = None, None
+    print(roundtrip)
+    exit()
     for edge1, edge2 in zip(roundtrip, roundtrip[1:]): 
         set_intersection = edge1.intersection(edge2)
         if len(output) == 0: 
             output.append(list(edge1 - set_intersection)[0])
         output.append(list(set_intersection)[0])
 
+        out_edge, out_set_intersection = edge2, set_intersection
+
     # append last vertex (which is also start vertex)
-    output.append(list(edge2-set_intersection)[0])
+    output.append(list(out_edge-out_set_intersection)[0])
     print(output)
 
     # write to the end of the output file 
@@ -121,8 +127,8 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
     edges_df = pd.read_csv(edgeFile)
     edges_df = edges_df[(edges_df["actualDistance"] > 50) & (edges_df["actualDistance"] < 200)]
 
-    locA = edges_df["locationA"]
-    locB = edges_df["locationB"]
+    locA = list(edges_df["locationA"])
+    locB = list(edges_df["locationB"])
 
     locations = list(locs_df["Location Label"])
 
@@ -131,14 +137,13 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
     for i in range(len(locA)): 
         A = locA[i]
         B = locB[i]
-        dist_A_B = edges_df["actualDistance"][i]
+        dist_A_B = list(edges_df["actualDistance"])[i]
         path = frozenset([A, B])
         edge_map[path] = dist_A_B
     
     # parse edge_map into bidirectional adjacency_list
     for edge in edge_map:
         locA, locB = edge
-
         if locA not in adjacency_list:
             adjacency_list[locA] = [locB]
         else:
@@ -156,7 +161,7 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
     # do priority search 
     pq = PriorityQueue()
     start_time = time.time() 
-    pq.put((-1*loc_prefs[startLoc], [frozenset(startLoc)], 0))
+    pq.put((-1*loc_prefs[startLoc], [frozenset([startLoc])], 0))
 
     while pq.qsize() > 0: 
         elt = pq.get()
@@ -166,23 +171,23 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
             continue 
 
         curr_loc = list(curr_roadtrip[-1])[-1]
+        print(elt)
 
-        if (curr_loc == startLoc and len(path) > 1):
+        if (curr_loc == startLoc and len(curr_roadtrip) > 1):
+            print_roundtrip(curr_roadtrip, x_mph, resultFile)   
             if (input("Should another solution be returned?") == "yes"):
-                print_roundtrip(curr_roadtrip, x_mph, resultFile)
+                continue 
             else:
-                pass #exit
+                current_time = time.time() 
+                break 
 
         for neighbor in adjacency_list[curr_loc]: 
             new_roadtrip = curr_roadtrip.copy()
             new_roadtrip.append(frozenset([curr_loc, neighbor]))
-            pq.put((total_preference(new_roadtrip), new_roadtrip, time_estimate(new_roadtrip, x_mph)))
+            pq.put((-1*total_preference(new_roadtrip), new_roadtrip, time_estimate(new_roadtrip, x_mph)))
 
 def main(): 
     RoundTripRoadTrip("NashvilleTN", "road_network_locs.csv", "road_network_edges.csv", 10, 50, "result.csv")
-
-
-
 
     ''' 
     random test 
