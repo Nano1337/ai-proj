@@ -9,6 +9,8 @@ locations = list()
 adjacency_list = {}
 loc_prefs= {} 
 edge_prefs = {}
+locs_df = None
+edges_df = None
 
 # Assign preference values between 0 and 1 for each location
 def location_preference_assignments(a, b):
@@ -81,10 +83,11 @@ print_roundtrip
 
 params: 
 - roundtrip: solution roundtrip stored as list of frozensets
+- output_file: name of output file to write to
 output: 
 - print in format as seen in specification
 """
-def print_roundtrip(roundtrip): 
+def print_roundtrip(roundtrip, output_file): 
     output = []
     # sliding window of two sets at a time
     for edge1, edge2 in zip(roundtrip, roundtrip[1:]): 
@@ -97,10 +100,20 @@ def print_roundtrip(roundtrip):
     output.append(list(edge2-set_intersection)[0])
     print(output)
 
+    # write to the end of the output file 
+    with open(output_file, "a") as f: 
+        for i in range(1, len(output)): 
+            # find the index where loc_df["locationA"] is equal to output[i-1] and loc_df["locationB"] is equal to output[i]
+            row = locs_df.loc[(locs_df["locationA"] == output[i-1]) & (locs_df["locationB"] == output[i])]
+            if row is None: 
+                row = locs_df.loc[(locs_df["locationA"] == output[i]) & (locs_df["locationB"] == output[i-1])]
+            edge_labl = row["edgeLabel"]
+            f.write(output[i-1] + "," + output[i] + "," + output[i-1] + "," + output[i])
+
 
 # Highest level round trip road trip function 
 def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
-    global edge_map, locations, loc_prefs, edge_prefs
+    global edge_map, locations, loc_prefs, edge_prefs, locs_df, edges_df, adjacency_list
 
     # read in the csv files and construct edge_map 
     locs_df = pd.read_csv(locFile)
