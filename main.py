@@ -61,7 +61,7 @@ def total_preference(roadtrip):
 
 # The time spent at a location as a function of its preference 
 def time_at_location (vloc): 
-    return vloc * 10
+    return vloc * 10 
 
 '''
 roadtrip is a list of edges, which are represented as fixedsets of locations
@@ -94,7 +94,8 @@ def print_roundtrip(roundtrip, speed, output_file):
     # sliding window of two sets at a time
 
     out_edge, out_set_intersection = None, None
-
+    print(roundtrip)
+    return 
     for edge1, edge2 in zip(roundtrip, roundtrip[1:]): 
         set_intersection = edge1.intersection(edge2)
         if len(output) == 0: 
@@ -171,7 +172,7 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
             continue 
 
         curr_loc = list(curr_roadtrip[-1])[-1]
-        #print(elt)
+        print(elt)
 
         if (curr_loc == startLoc and len(curr_roadtrip) > 1):
             print("reached")
@@ -184,12 +185,13 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
             #     break 
 
         for neighbor in adjacency_list[curr_loc]: 
+            print(neighbor)
             new_roadtrip = curr_roadtrip.copy()
             new_roadtrip.append(frozenset([curr_loc, neighbor]))
             pq.put((-1*total_preference(new_roadtrip), new_roadtrip, time_estimate(new_roadtrip, x_mph)))
 
 def main(): 
-    RoundTripRoadTrip("NashvilleTN", "road_network_locs.csv", "road_network_edges.csv", 10, 50, "result.csv")
+    RoundTripRoadTrip("NashvilleTN", "road_network_locs.csv", "road_network_edges.csv", 1000, 50, "result.csv")
 
     ''' 
     random test 
