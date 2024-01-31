@@ -1,15 +1,11 @@
 Solution: 2, Start Location: NashvilleTN, Max Time: 20 hrs, Speed: 50 mph
 
-1. NashvilleTN, AlbanyKY, NashvilleTN_tofrom_AlbanyKY, 0.05227530888009794, 2.62, 0.8425230643689717, 8.425230643689718 
+1. NashvilleTN, AlbanyKY, NashvilleTN_tofrom_AlbanyKY, 0.09430712166622786, 2.62, 0.9663931883624968, 9.663931883624969 
 
-2. AlbanyKY, SpartaTN, SpartaTN_tofrom_AlbanyKY, 0.09059034290964253, 1.34, 0.60817634439244, 6.0817634439244 
+2. AlbanyKY, OakRidgeTN, OakRidgeTN_tofrom_AlbanyKY, 0.09906046153224504, 1.7, 0.6317676127754498, 6.317676127754498 
 
-3. SpartaTN, AlbanyKY, SpartaTN_tofrom_AlbanyKY, 0.09059034290964253, 1.34, 0.8425230643689717, 8.425230643689718 
+3. OakRidgeTN, AlbanyKY, OakRidgeTN_tofrom_AlbanyKY, 0.09906046153224504, 1.7, 0.9663931883624968, 9.663931883624969 
 
-4. AlbanyKY, OakRidgeTN, OakRidgeTN_tofrom_AlbanyKY, 0.038902086377440984, 1.7, 0.5678551609124547, 5.678551609124547 
+4. AlbanyKY, NashvilleTN, NashvilleTN_tofrom_AlbanyKY, 0.09430712166622786, 2.62, 0.6779936884280207, 6.779936884280207 
 
-5. OakRidgeTN, AlbanyKY, OakRidgeTN_tofrom_AlbanyKY, 0.038902086377440984, 1.7, 0.8425230643689717, 8.425230643689718 
-
-6. AlbanyKY, NashvilleTN, NashvilleTN_tofrom_AlbanyKY, 0.05227530888009794, 2.62, 0.261732712890839, 2.61732712890839 
-
-Start Location: NashvilleTN, Total Trip Preference: 2.643822758899068 , Total Trip Distance: 566.0 miles, Total Trip Time: 17.57268189225202 hrs
+Start Location: NashvilleTN, Total Trip Preference: 2.662889655962913 , Total Trip Distance: 432.0 miles, Total Trip Time: 19.287288548249663 hrs
