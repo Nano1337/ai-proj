@@ -175,8 +175,8 @@ def print_roundtrip(output, speed, file_counter, startLoc, maxTime):
     
     # write to the end of the output file 
     with open(output_file, "w") as f: 
-        f.write(f'Solution: {file_counter}, Start Location: {startLoc}, Max Time: {maxTime}, Speed: {speed} mph\n\n')
-        print(f'\n\nSolution: {file_counter}, Start Location: {startLoc}, Max Time: {maxTime}, Speed: {speed} mph\n')
+        f.write(f'Solution: {file_counter}, Start Location: {startLoc}, Max Time: {maxTime} hrs, Speed: {speed} mph\n\n')
+        print(f'\n\nSolution: {file_counter}, Start Location: {startLoc}, Max Time: {maxTime} hrs, Speed: {speed} mph\n')
 
         for i in range(1, len(output)): 
             # find the index where loc_df["locationA"] is equal to output[i-1] and loc_df["locationB"] is equal to output[i]
@@ -295,8 +295,8 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
             total_pref = total_preference(curr_roadtrip)
             all_trip_prefs.append(total_pref)
             with open(f"resultFile{file_counter}.csv", "a") as f: 
-                f.write(f'Start Location: {startLoc}, Total Trip Preference: {total_pref} , Total Trip Distance: {total_distance} miles, Total Trip Time: {time_estimate(curr_roadtrip, x_mph)}')
-            print(f'Start Location: {startLoc}, Total Trip Preference: {total_pref} , Total Trip Distance: {total_distance} miles, Total Trip Time: {time_estimate(curr_roadtrip, x_mph)}\n\n')
+                f.write(f'Start Location: {startLoc}, Total Trip Preference: {total_pref} , Total Trip Distance: {total_distance} miles, Total Trip Time: {time_estimate(curr_roadtrip, x_mph)} hrs')
+            print(f'Start Location: {startLoc}, Total Trip Preference: {total_pref} , Total Trip Distance: {total_distance} miles, Total Trip Time: {time_estimate(curr_roadtrip, x_mph)} hrs\n\n')
 
             file_counter +=1
             end_time = time.time()

@@ -1,17 +1,15 @@
-Solution: 2, Start Location: NashvilleTN, Max Time: 20, Speed: 50 mph
+Solution: 2, Start Location: NashvilleTN, Max Time: 20 hrs, Speed: 50 mph
 
-1. NashvilleTN, AthensTN, Nashville_tofrom_Athens, 0.06827117649356625, 3.38, 0.6681239943294521, 6.681239943294521 
+1. NashvilleTN, AlbanyKY, NashvilleTN_tofrom_AlbanyKY, 0.05227530888009794, 2.62, 0.8425230643689717, 8.425230643689718 
 
-2. AthensTN, ChattanoogaTN, Athens_tofrom_Chattanooga, 0.09685323272528745, 1.16, 0.9748617801013321, 9.74861780101332 
+2. AlbanyKY, SpartaTN, SpartaTN_tofrom_AlbanyKY, 0.09059034290964253, 1.34, 0.60817634439244, 6.0817634439244 
 
-3. ChattanoogaTN, OakRidgeTN, ChattanoogaTN_tofrom_OakRidgeTN, 0.033334589133793203, 2.02, 0.8570698368875516, 8.570698368875515 
+3. SpartaTN, AlbanyKY, SpartaTN_tofrom_AlbanyKY, 0.09059034290964253, 1.34, 0.8425230643689717, 8.425230643689718 
 
-4. OakRidgeTN, AlbanyKY, OakRidgeTN_tofrom_AlbanyKY, 0.016220953058227818, 1.7, 0.5013122847679317, 5.013122847679316 
+4. AlbanyKY, OakRidgeTN, OakRidgeTN_tofrom_AlbanyKY, 0.038902086377440984, 1.7, 0.5678551609124547, 5.678551609124547 
 
-5. AlbanyKY, SpartaTN, SpartaTN_tofrom_AlbanyKY, 0.051425952444133775, 1.34, 0.47634504821946255, 4.763450482194625 
+5. OakRidgeTN, AlbanyKY, OakRidgeTN_tofrom_AlbanyKY, 0.038902086377440984, 1.7, 0.8425230643689717, 8.425230643689718 
 
-6. SpartaTN, AlbanyKY, SpartaTN_tofrom_AlbanyKY, 0.051425952444133775, 1.34, 0.5013122847679317, 5.013122847679316 
+6. AlbanyKY, NashvilleTN, NashvilleTN_tofrom_AlbanyKY, 0.05227530888009794, 2.62, 0.261732712890839, 2.61732712890839 
 
-7. AlbanyKY, NashvilleTN, NashvilleTN_tofrom_AlbanyKY, 0.06912061639360738, 2.62, 0.07355503642679362, 0.7355503642679362 
-
-Start Location: NashvilleTN, Total Trip Preference: 3.9379204534252734 , Total Trip Distance: 678.0 miles, Total Trip Time: 18.162075091195433
+Start Location: NashvilleTN, Total Trip Preference: 2.643822758899068 , Total Trip Distance: 566.0 miles, Total Trip Time: 17.57268189225202 hrs
