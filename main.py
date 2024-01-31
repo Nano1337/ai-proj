@@ -22,11 +22,15 @@ import time
 # global variable: edge_map is a dictionary mapping out the edges as sets to their distances 
 edge_map = dict() 
 locations = list()
+all_trip_prefs = list()
+# all_runtimes = list()
 adjacency_list = {}
 loc_prefs= {} 
 edge_prefs = {}
 locs_df = None
 edges_df = None
+total_distance = 0
+
 
 """
 location_preference_assignments
@@ -139,10 +143,11 @@ print_roundtrip
 params: 
     - roundtrip: solution roundtrip stored as list of frozensets
     - output_file: name of output file to write to
+    - startLoc: start location of roadtrip
 returns: 
     - print in format as seen in specification
 """
-def print_roundtrip(output, speed, output_file): 
+def print_roundtrip(output, speed, file_counter, startLoc, maxTime): 
     '''
     output = []
     # sliding window of two sets at a time
@@ -163,8 +168,16 @@ def print_roundtrip(output, speed, output_file):
     output.append(list(out_edge-out_set_intersection)[0])
     print(output)
     '''
+    global total_distance
+
+    output_file = f"resultFile{file_counter}.csv"
+    total_distance = 0
+    
     # write to the end of the output file 
-    with open(output_file, "a") as f: 
+    with open(output_file, "w") as f: 
+        f.write(f'Solution: {file_counter}, Start Location: {startLoc}, Max Time: {maxTime}, Speed: {speed} mph\n\n')
+        print(f'\nSolution: {file_counter}, Start Location: {startLoc}, Max Time: {maxTime}, Speed: {speed} mph\n\n')
+
         for i in range(1, len(output)): 
             # find the index where loc_df["locationA"] is equal to output[i-1] and loc_df["locationB"] is equal to output[i]
             row = edges_df[(edges_df["locationA"] == output[i-1]) & (edges_df["locationB"] == output[i])]
@@ -172,9 +185,40 @@ def print_roundtrip(output, speed, output_file):
                 row = edges_df[(edges_df["locationA"] == output[i]) & (edges_df["locationB"] == output[i-1])]
             edge_label = list(row["edgeLabel"])[0]
 
-            printing = f'{output[i-1]}, {output[i]}, {edge_label}, {get_edge_pref(frozenset([output[i-1], output[i]]))}, {edge_map[frozenset([output[i-1], output[i]])]/speed}, {loc_prefs[output[i]]}, {time_at_location(loc_prefs[output[i]])} \n'
+            edge_distance = edge_map.get(frozenset([output[i-1], output[i]]), 0)
+            total_distance += edge_distance
+
+            printing = f'{i}. {output[i-1]}, {output[i]}, {edge_label}, {get_edge_pref(frozenset([output[i-1], output[i]]))}, {edge_map[frozenset([output[i-1], output[i]])]/speed}, {loc_prefs[output[i]]}, {time_at_location(loc_prefs[output[i]])} \n\n'
             f.write(printing)
-        f.write("\n")
+            print(printing)
+
+"""
+print_summary
+
+params: 
+    - all_trip_prefs: list of each solution's total trip preference
+returns: 
+    - prints summary to resultFile.csv and to screen
+"""    
+def print_summary(trip_pref_list, all_runtimes):
+    avg_runtime = sum(all_runtimes) / len(all_runtimes) if all_runtimes else 0
+    max_pref = max(trip_pref_list)
+    avg_pref = sum(trip_pref_list) / len(trip_pref_list) if trip_pref_list else 0
+    min_pref = min(trip_pref_list)
+
+    with open(f"resultFile.csv", "w") as f:
+        f.write(f'Summary File\n\n')
+        f.write(f'Average instrumented runtime of all continuations of the search: {avg_runtime} seconds\n\n')
+        f.write(f'Maximum Total Trip Preference found across all solution paths: {max_pref}\n\n')
+        f.write(f'Average Total Trip Preference found across all solution paths: {avg_pref}\n\n')
+        f.write(f'Minimum Total Trip Preference found across all solution paths: {min_pref}')
+
+    print(f'\nSummary:\n')
+    print(f'Average instrumented runtime of all continuations of the search: {avg_runtime} seconds\n')
+    print(f'Maximum Total Trip Preference found across all solution paths: {max_pref}\n')
+    print(f'Average Total Trip Preference found across all solution paths: {avg_pref}\n')
+    print(f'Minimum Total Trip Preference found across all solution paths: {min_pref}\n')    
+        
 
 """
 RoundTripRoadTrip
@@ -227,11 +271,14 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
 
     # do priority search 
     pq = PriorityQueue()
-    start_time = time.time() 
     pq.put((-1*loc_prefs[startLoc], [frozenset([startLoc])], 0, [startLoc]))
+    all_runtimes = list()
+    file_counter = 1
 
     while pq.qsize() > 0: 
-        print(list(pq.queue))
+        start_time = time.time() 
+
+        # print(list(pq.queue))
         elt = pq.get()
         curr_roadtrip = elt[1]
 
@@ -243,13 +290,28 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
 
         if (curr_loc == startLoc and len(curr_roadtrip) > 1):
             #print("reached")
-            print_roundtrip(elt[3], x_mph, resultFile)   
             
-            if (input("Should another solution be returned?") == "yes"):
+            print_roundtrip(elt[3], x_mph, file_counter, startLoc, maxTime)
+            total_pref = total_preference(curr_roadtrip)
+            all_trip_prefs.append(total_pref)
+            with open(f"resultFile{file_counter}.csv", "a") as f: 
+                f.write(f'Start Location: {startLoc}, Total Trip Preference: {total_pref} , Total Trip Distance: {total_distance} miles, Total Trip Time: {time_estimate(curr_roadtrip, x_mph)}')
+
+            file_counter +=1
+            end_time = time.time()
+            search_time = end_time - start_time
+            all_runtimes.append(search_time)
+
+
+            
+            if (input("Should another solution be returned? ") == "yes"):
+                current_time = time.time()
                 continue 
             else:
-                current_time = time.time() 
-                break 
+                # current_time = time.time() 
+                print_summary(all_trip_prefs, all_runtimes)
+                break
+
 
         for neighbor in adjacency_list[curr_loc]: 
             new_roadtrip = curr_roadtrip.copy()
@@ -261,6 +323,7 @@ def main():
 
     ''' 
     random test 
+    
 
     loc_prefs = location_preference_assignments(0, 1)
     edge_prefs = edge_preference_assignments(0, 1)
