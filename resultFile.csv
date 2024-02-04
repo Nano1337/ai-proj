@@ -1,9 +1,9 @@
 Summary File
 
-Average instrumented runtime of all continuations of the search: 0.003913561503092448 seconds
+Average instrumented runtime of all continuations of the search: 0.0017745494842529297 seconds
 
-Maximum Total Trip Preference found across all solution paths: 2.9148819755017548
+Maximum Total Trip Preference found across all solution paths: 3.9694293212102565
 
-Average Total Trip Preference found across all solution paths: 2.5863036782223556
+Average Total Trip Preference found across all solution paths: 3.664504129915747
 
-Minimum Total Trip Preference found across all solution paths: 2.1811394032023985
+Minimum Total Trip Preference found across all solution paths: 3.1882612435306763

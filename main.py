@@ -6,7 +6,15 @@ Team Members (Group 3):
 - Shreya Reddy
 
 How to Run Code:
-TODO: XXXXXXXX
+Create a python virtual environment
+Install dependencies (Linux instructions, slightly different for Windows)
+Run code
+```bash 
+
+python -m venv venv 
+source venv/bin/activate
+python main.py
+```
 
 Search Strategy:
 Our code implements a utility-driven search using a priority queue, where the search prioritizes
@@ -346,9 +354,30 @@ if __name__ == "__main__":
 
 """
 Qualitative Comments:
-TODO: XXXXXXXXX
+Test Cases with No Solution: The design of the algorithm inherently filters out routes exceeding 
+the specified maximum time (maxTime) through its time_estimate function. This implies that for certain start locations, 
+configurations of location and edge preferences, and stringent time constraints, it's plausible that 
+no viable solution could be found. However, this is unlikely as the edges are undirected and a cycle on an edge could be 
+considered a valid road trip, albeit one that's not preferred. 
+
+Solution Value Trends: The search prioritizes the highest preference scores first, without ensuring a monotonic decrease in 
+solution values. The variability in preferences means the sequence of solution values could fluctuate based on the explored paths.
+
+Adhering to Time Constraints: The time_estimate function ensures solutions adhere to specified time constraints by 
+discarding paths that exceed maxTime, assuming the function accurately estimates travel times.
+
 
 Quantitative Summary:
-TODO: XXXXXXXXX
 
+For 3 runs: 
+
+Average instrumented runtime of all continuations of the search: 0.0017745494842529297 seconds
+
+Maximum Total Trip Preference found across all solution paths: 3.9694293212102565
+
+Average Total Trip Preference found across all solution paths: 3.664504129915747
+
+Average Minimum Total Trip Preference found across all solution paths: 3.1882612435306763
+
+This data is directly shown after answering no to "Should another solution be returned?"
 """    
