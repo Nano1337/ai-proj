@@ -29,6 +29,16 @@ class Value:
         
         return out
 
+    def __pow__(self, other):
+        assert isinstance(other, (int, float)), "only supporting int/float powers for now"
+        out = Value(self.data**other, (self,), f'**{other}')
+
+        def backward():
+            self.grad += (other * self.data**(other-1)) * out.grad
+        out.backward = backward
+
+        return out
+
     def relu(self): 
         out = Value(0 if self.data < 0 else self.data, (self,), 'ReLU')
 
@@ -46,7 +56,7 @@ class Value:
         def build_topo(v):
             if v not in visited:
                 visited.add(v)
-                for child in v._prev:
+                for child in v.prev:
                     build_topo(child)
                 topo.append(v)
         build_topo(self)

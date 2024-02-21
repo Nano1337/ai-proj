@@ -77,8 +77,8 @@ def MSE(y_pred, y_true):
     mse = np.mean((y_pred - y_true) ** 2)
     return mse
 
-# loss function
-def loss(model, batch_size=None):
+# train for one epoch
+def train_epoch(model, batch_size=None):
     
     # inline DataLoader :)
     if batch_size is None:
@@ -91,11 +91,11 @@ def loss(model, batch_size=None):
     # forward the model to get scores
     scores = list(map(model, inputs))
 
-    losses = [(1 + -yi*scorei).relu() for yi, scorei in zip(yb, scores)]
+    # Calculate Mean Squared Error (MSE) Loss
+    losses = [((yi - scorei)**2) for yi, scorei in zip(yb, scores)]
     total_loss = sum(losses) * (1.0 / len(losses))
     
-    accuracy = [(yi > 0) == (scorei.data > 0) for yi, scorei in zip(yb, scores)]
-    return total_loss, sum(accuracy) / len(accuracy)
+    return total_loss
 
 if __name__ == "__main__":
 
@@ -113,26 +113,26 @@ if __name__ == "__main__":
     # normalize design matrix
     X = (X - X.mean(axis=0, keepdims=True)) / X.std(axis=0, keepdims=True)
    
+    # TODO: implement 5 fold cross validation, 
     # run training
-
-    # Define learning parameters
     epochs = 100  # Number of training epochs
-    learning_rate = 0.01  # Learning rate for weight updates
+    learning_rate = 0.05  # Learning rate for weight updates
+    batch_size = 250
 
     for k in range(100):
         
         # forward
-        total_loss, acc = loss(model, batch_size=500)
+        total_loss = train_epoch(model, batch_size=250)
         
         # backward
         model.zero_grad()
-        total_loss.backward()
+        total_loss.backwards()
         
-        # update (sgd)
-        learning_rate = 1.0 - 0.9*k/100
+        # update with stochastic gradient descent
+        # learning_rate = 1.0 - 0.1*k/100
         for p in model.parameters():
             p.data -= learning_rate * p.grad
         
         if k % 1 == 0:
-            print(f"step {k} loss {total_loss.data}, accuracy {acc*100}%")
+            print(f"step {k} loss {total_loss.data}")
         
