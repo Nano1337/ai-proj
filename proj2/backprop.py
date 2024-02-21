@@ -19,7 +19,7 @@ class Value:
 
     def __mul__(self, other): 
         other = other if isinstance(other, Value) else Value(other)
-        out = Vavlue(self.data * other.data, (self, other), '*')
+        out = Value(self.data * other.data, (self, other), '*')
 
         def backward(): 
             self.grad += other.data * out.grad

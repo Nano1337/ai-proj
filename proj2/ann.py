@@ -1,6 +1,7 @@
 import random
 from backprop import Value
 import pandas as pd
+import numpy as np
 
 class Module:
 
@@ -65,14 +66,73 @@ class MLP(Module):
     def __repr__(self):
         return f"MLP of [{', '.join(str(layer) for layer in self.layers)}]"
 
+def MSE(y_pred, y_true):
+    """
+    Calculate the mean squared error between the predicted and true labels.
+    
+    :param y_pred: Predicted values, a numpy array of shape (n_samples,)
+    :param y_true: True values, a numpy array of shape (n_samples,)
+    :return: The mean squared error.
+    """
+    mse = np.mean((y_pred - y_true) ** 2)
+    return mse
+
+# loss function
+def loss(model, batch_size=None):
+    
+    # inline DataLoader :)
+    if batch_size is None:
+        Xb, yb = X, y
+    else:
+        ri = np.random.permutation(X.shape[0])[:batch_size]
+        Xb, yb = X[ri], y[ri]
+    inputs = [list(map(Value, xrow)) for xrow in Xb]
+    
+    # forward the model to get scores
+    scores = list(map(model, inputs))
+
+    losses = [(1 + -yi*scorei).relu() for yi, scorei in zip(yb, scores)]
+    total_loss = sum(losses) * (1.0 / len(losses))
+    
+    accuracy = [(yi > 0) == (scorei.data > 0) for yi, scorei in zip(yb, scores)]
+    return total_loss, sum(accuracy) / len(accuracy)
+
 if __name__ == "__main__":
+
+    # make ann
     input_dim = 10
     hidden_dim = [4]
     output_dim = 1
     model = MLP(input_dim, hidden_dim, output_dim)
 
+    # read and extract data, labels
     df = pd.read_csv('data.txt', sep='\t', encoding='utf-16')
-    
     X = df[['t0', 't1', 't2', 't3', 't4', 't5', 't6', 't7', 't8', 't9']].to_numpy()
-    labels = df['utility'].to_numpy() 
-    print(X.shape, labels.shape)
+    y = df['utility'].to_numpy() 
+
+    # normalize design matrix
+    X = (X - X.mean(axis=0, keepdims=True)) / X.std(axis=0, keepdims=True)
+   
+    # run training
+
+    # Define learning parameters
+    epochs = 100  # Number of training epochs
+    learning_rate = 0.01  # Learning rate for weight updates
+
+    for k in range(100):
+        
+        # forward
+        total_loss, acc = loss(model, batch_size=500)
+        
+        # backward
+        model.zero_grad()
+        total_loss.backward()
+        
+        # update (sgd)
+        learning_rate = 1.0 - 0.9*k/100
+        for p in model.parameters():
+            p.data -= learning_rate * p.grad
+        
+        if k % 1 == 0:
+            print(f"step {k} loss {total_loss.data}, accuracy {acc*100}%")
+        
