@@ -5,3 +5,5 @@ Members:
 - Lydia Liu
 - Richard Song
 - Shreya Reddy
+
+Please refer to `main.py` for all requirements. 
