@@ -65,6 +65,8 @@ class DecisionTree:
                     node.left = self._grow_tree(X_left, y_left, depth + 1)
                 if X_right.shape[0] > 0:
                     node.right = self._grow_tree(X_right, y_right, depth + 1)
+                if node.left is None and node.right is None:
+                    node.is_leaf_node = True
         return node
 
     def calculate_entropy(self, y):
@@ -121,11 +123,14 @@ class DecisionTree:
             
 
     def _traverse_tree(self, x, node):
-        if node.is_leaf_node:
-            return node.value
-        if x[node.feature] < node.threshold:
-            return self._traverse_tree(x, node.left)
-        return self._traverse_tree(x, node.right)
+        try:
+            if node.is_leaf_node or (node.left is None and node.right is None):
+                return node.value
+            if x[node.feature] < node.threshold:
+                return self._traverse_tree(x, node.left)
+            return self._traverse_tree(x, node.right)
+        except:
+            print(node.feature, node.threshold, node.left, node.right, node.is_leaf_node)
 #%% 
     
 # Preprocess data
