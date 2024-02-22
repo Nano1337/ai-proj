@@ -101,7 +101,7 @@ if __name__ == "__main__":
 
     # make ann
     input_dim = 10
-    hidden_dim = [4]
+    hidden_dim = [8]
     output_dim = 1
     model = MLP(input_dim, hidden_dim, output_dim)
 
@@ -113,7 +113,6 @@ if __name__ == "__main__":
     # normalize design matrix
     X = (X - X.mean(axis=0, keepdims=True)) / X.std(axis=0, keepdims=True)
    
-    # TODO: implement 5 fold cross validation, 
     # run training
     epochs = 100  # Number of training epochs
     learning_rate = 0.05  # Learning rate for weight updates
