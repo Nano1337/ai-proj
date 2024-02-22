@@ -66,17 +66,6 @@ class MLP(Module):
     def __repr__(self):
         return f"MLP of [{', '.join(str(layer) for layer in self.layers)}]"
 
-def MSE(y_pred, y_true):
-    """
-    Calculate the mean squared error between the predicted and true labels.
-    
-    :param y_pred: Predicted values, a numpy array of shape (n_samples,)
-    :param y_true: True values, a numpy array of shape (n_samples,)
-    :return: The mean squared error.
-    """
-    mse = np.mean((y_pred - y_true) ** 2)
-    return mse
-
 # train for one epoch
 def train_epoch(model, batch_size=None):
     
