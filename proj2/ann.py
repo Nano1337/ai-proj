@@ -66,17 +66,6 @@ class MLP(Module):
     def __repr__(self):
         return f"MLP of [{', '.join(str(layer) for layer in self.layers)}]"
 
-def MSE(y_pred, y_true):
-    """
-    Calculate the mean squared error between the predicted and true labels.
-    
-    :param y_pred: Predicted values, a numpy array of shape (n_samples,)
-    :param y_true: True values, a numpy array of shape (n_samples,)
-    :return: The mean squared error.
-    """
-    mse = np.mean((y_pred - y_true) ** 2)
-    return mse
-
 # train for one epoch
 def train_epoch(model, batch_size=None):
     
@@ -101,7 +90,7 @@ if __name__ == "__main__":
 
     # make ann
     input_dim = 10
-    hidden_dim = [4]
+    hidden_dim = [8]
     output_dim = 1
     model = MLP(input_dim, hidden_dim, output_dim)
 
@@ -113,7 +102,6 @@ if __name__ == "__main__":
     # normalize design matrix
     X = (X - X.mean(axis=0, keepdims=True)) / X.std(axis=0, keepdims=True)
    
-    # TODO: implement 5 fold cross validation, 
     # run training
     epochs = 100  # Number of training epochs
     learning_rate = 0.05  # Learning rate for weight updates
