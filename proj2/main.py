@@ -4,12 +4,14 @@ import math
 
 #%%
 class Node:
-    def __init__(self, feature=None, threshold=None, left=None, right=None, *, value=None):
+    def __init__(self, feature=None, threshold=None, left=None, right=None, *, value=None, counts=None):
         self.feature = feature
         self.threshold = threshold
         self.left = left
         self.right = right
         self.value = value
+        self.counts = counts
+        self.is_leaf_node = False
 
     def is_leaf_node(self):
         return self.value is not None
@@ -22,16 +24,34 @@ class DecisionTree:
 
     def fit(self, X, y):
         self.root = self._grow_tree(X, y)
+        self.print_tree()
+    
+    def print_tree(self, node=None, depth=0):
+        if node is None:
+            node = self.root
+
+        indent = "  " * depth
+        if node.is_leaf_node:
+            print(f"{indent}Leaf Node - Predict: {node.value} with counts: {node.counts}")
+        else:
+            print(f"{indent}Node - Feature: {node.feature}, Threshold: {node.threshold}, Counts: {node.counts}")
+            if node.left is not None:
+                print(f"{indent}Left:")
+                self.print_tree(node.left, depth + 1)
+            if node.right is not None:
+                print(f"{indent}Right:")
+                self.print_tree(node.right, depth + 1)
+
 
     def predict(self, X):
         return [self._traverse_tree(x, self.root) for x in X.values]
         
-        # get the prediction for each row in X
-
-
     def _grow_tree(self, X, y, depth=0):
         num_samples_per_class = [sum(y == i) for i in np.unique(y)]
-        node = Node(value=np.unique(y)[np.argmax(num_samples_per_class)])
+        node = Node(value=np.unique(y)[np.argmax(num_samples_per_class)], counts=num_samples_per_class)
+        self.print_tree(node, depth)
+        if depth == self.max_depth:
+            node.is_leaf_node = True
 
         if depth < self.max_depth:
             idx, thr = self._best_split(X, y)
@@ -41,39 +61,67 @@ class DecisionTree:
                 X_right, y_right = X[~indices_left], y[~indices_left]
                 node.feature = idx
                 node.threshold = thr
-                node.left = self._grow_tree(X_left, y_left, depth + 1)
-                node.right = self._grow_tree(X_right, y_right, depth + 1)
+                if X_left.shape[0] > 0:
+                    node.left = self._grow_tree(X_left, y_left, depth + 1)
+                if X_right.shape[0] > 0:
+                    node.right = self._grow_tree(X_right, y_right, depth + 1)
         return node
 
-    def _best_split(self, X, y):
-        # Get threshold for each feature, equivalent to the mean of the feature 
-        thresholds = [np.median(X.iloc[:, feature]) for feature in range(X.shape[1])]
+    def calculate_entropy(self, y):
+        """Calculate the entropy of label distribution."""
+        if len(y) == 0:  # To avoid log(0)
+            return 0
+        proportions = np.array([sum(y == i) for i in np.unique(y)]) / len(y)
+        entropy = -np.sum([p * np.log2(p) for p in proportions if p > 0])
+        return entropy
 
-        # Calculate score for each feature 
-        score = []
-        for t in range(len(thresholds)):
-            thresh = thresholds[t] 
-            p1 = sum(X.iloc[:, t] < thresh) / X.shape[0]
-            p2 = sum(X.iloc[:, t] >= thresh) / X.shape[0]
-            p1_inner = 0 
-            p2_inner = 0
-            for i in np.unique(y):
-                try:
-                    p1_inner += sum(y[X.iloc[:, t] < thresh] == i) / sum(X.iloc[:, t] < thresh) * math.log(sum(y[X.iloc[:, t] < thresh] == i) / sum(X.iloc[:, t] < thresh))
-                except:
-                    p1_inner += 0
-                try:
-                    p2_inner += sum(y[X.iloc[:, t] >= thresh] == i) / sum(X.iloc[:, t] >= thresh) * math.log(sum(y[X.iloc[:, t] >= thresh] == i) / sum(X.iloc[:, t] >= thresh))
-                except:
-                    p2_inner += 0
-            p1 = p1 * p1_inner
-            p2 = p2 * p2_inner
-            score.append(p1 + p2) 
-        return np.argmin(score), thresholds[np.argmin(score)]
+    def information_gain(self, X_column, y, threshold):
+        """Calculate information gain for a split on a given feature at a given threshold."""
+        # Parent entropy
+        parent_entropy = self.calculate_entropy(y)
+
+        # Generate split
+        left_mask = X_column < threshold
+        right_mask = ~left_mask
+        left_y = y[left_mask]
+        right_y = y[right_mask]
+
+        # Weighted average child entropy
+        n = len(y)
+        n_left, n_right = len(left_y), len(right_y)
+        e_left, e_right = self.calculate_entropy(left_y), self.calculate_entropy(right_y)
+        child_entropy = (n_left / n) * e_left + (n_right / n) * e_right
+
+        # Information gain
+        ig = parent_entropy - child_entropy
+        return ig
+
+    def _best_split(self, X, y):
+        """Find the best split for a node."""
+        # Initialize variables to track the best split
+        best_gain = -1
+        best_feature = None
+        best_threshold = None
+
+        n_features = X.shape[1]
+
+        for feature in range(n_features):
+            thresholds = np.unique(X.iloc[:, feature])
+            
+            for i in range(1, len(thresholds)):
+                threshold = (thresholds[i - 1] + thresholds[i]) / 2
+                ig = self.information_gain(X.iloc[:, feature], y, threshold)
+                
+                if ig > best_gain:
+                    best_gain = ig
+                    best_feature = feature
+                    best_threshold = threshold
+
+        return best_feature, best_threshold
             
 
     def _traverse_tree(self, x, node):
-        if node.is_leaf_node():
+        if node.is_leaf_node:
             return node.value
         if x[node.feature] < node.threshold:
             return self._traverse_tree(x, node.left)
