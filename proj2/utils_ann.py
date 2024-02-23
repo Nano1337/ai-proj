@@ -1,12 +1,11 @@
 import pandas as pd
 import numpy as np
-from sklearn.metrics import accuracy_score
 from sklearn.linear_model import LogisticRegression # TODO: PLACEHOLDER
 
 
 # Load your dataset
 df = pd.read_csv('data.txt', sep='\t', encoding='utf-16')
-# df = df.sample(frac=1).reset_index(drop=True)
+df = df.sample(frac=1).reset_index(drop=True)
 X = df.drop('utility', axis=1).values
 y = df['utility'].apply(lambda x: {'very low': 0, 'low': 1, 'average': 2, 'good': 3, 'great': 4}[x]).values
 
@@ -56,10 +55,11 @@ for train_indices, test_indices in fold_indices:
     X_train_normalized, X_test_normalized = normalize(X_train, X_test)
     
     model.fit(X_train_normalized, y_train)
-    y_pred = model.predict(X_test_normalized)
+    y_pred = model.predict(X_test_normalized) # PLACEHOLDER
     
-    fold_score = accuracy_score(y_test, y_pred)
+    fold_score = np.sum(y_test == y_pred) / len(y_test)
     scores.append(fold_score)
+
     fold_mre = calculate_mre(y_test, y_pred)
     mres.append(fold_mre)
 
