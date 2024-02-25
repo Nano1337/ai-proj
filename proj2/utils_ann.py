@@ -29,10 +29,6 @@ def normalize(train, test):
     test_normalized = (test - mean) / std
     return train_normalized, test_normalized
 
-# def calculate_mre(y_true, y_pred):
-#     mre = np.mean(np.abs((y_true - y_pred) / y_true))
-#     return mre
-
 def calculate_mre(y_true, y_pred):
     y_true, y_pred = np.array(y_true), np.array(y_pred)
     nonzero_indices = y_true != 0
