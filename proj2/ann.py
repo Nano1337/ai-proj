@@ -2,6 +2,9 @@ import random
 from backprop import Value
 import pandas as pd
 import numpy as np
+from tqdm import tqdm
+
+from utils_ann import kfold_indices, normalize
 
 class Module:
 
@@ -67,12 +70,12 @@ class MLP(Module):
         return f"MLP of [{', '.join(str(layer) for layer in self.layers)}]"
 
 # train for one epoch
-def train_epoch(model, batch_size=None):
+def run_epoch(model, X, y, batch_size=None):
     
-    # inline DataLoader :)
-    if batch_size is None:
+    # make batches
+    if batch_size is None: # use all data
         Xb, yb = X, y
-    else:
+    else: # use batch size
         ri = np.random.permutation(X.shape[0])[:batch_size]
         Xb, yb = X[ri], y[ri]
     inputs = [list(map(Value, xrow)) for xrow in Xb]
@@ -86,41 +89,71 @@ def train_epoch(model, batch_size=None):
     
     return total_loss
 
-if __name__ == "__main__":
-
-    # make ann
-    input_dim = 10
-    hidden_dim = [8]
-    output_dim = 1
-    model = MLP(input_dim, hidden_dim, output_dim)
-
-    # read and extract data, labels
-    df = pd.read_csv('data.txt', sep='\t', encoding='utf-16')
-    X = df[['t0', 't1', 't2', 't3', 't4', 't5', 't6', 't7', 't8', 't9']].to_numpy()
-    y = df['utility'].to_numpy() 
-
-    # normalize design matrix
-    X = (X - X.mean(axis=0, keepdims=True)) / X.std(axis=0, keepdims=True)
-   
+def train_model(model, X_train, y_train): 
     # run training
     epochs = 100  # Number of training epochs
-    learning_rate = 0.05  # Learning rate for weight updates
+    learning_rate = 0.1  # Learning rate for weight updates
     batch_size = 250
 
-    for k in range(100):
+    for k in tqdm(range(75)):
         
         # forward
-        total_loss = train_epoch(model, batch_size=250)
+        total_loss = run_epoch(model, X_train, y, batch_size=250)
         
         # backward
         model.zero_grad()
         total_loss.backwards()
         
         # update with stochastic gradient descent
-        # learning_rate = 1.0 - 0.1*k/100
         for p in model.parameters():
             p.data -= learning_rate * p.grad
+
+    return model, total_loss.data
+
+if __name__ == "__main__":
+
+    # ann hyperparameters
+    input_dim = 10
+    hidden_dim = [8]
+    output_dim = 1
+
+    # read and extract data, labels
+    df = pd.read_csv('orig_data.txt', sep='\t', encoding='utf-8')
+    X = df[['t0', 't1', 't2', 't3', 't4', 't5', 't6', 't7', 't8', 't9']].to_numpy()
+    y = df['utility'].to_numpy() 
+
+    # normalize design matrix
+    X_train = (X - X.mean(axis=0, keepdims=True)) / X.std(axis=0, keepdims=True)
+   
+    # 5-fold cross-validation
+    k = 5
+    fold_indices = kfold_indices(X_train, k)
+
+    fold_losses = []
+    # NOTE: this takes about 2 minutes to completely run
+    count = 1
+    for train_indices, test_indices in fold_indices:
+        # reset model and create train/val split
+        model = MLP(input_dim, hidden_dim, output_dim)
+        X_train, y_train = X[train_indices], y[train_indices]
+        X_test, y_test = X[test_indices], y[test_indices]
+        X_train, X_test = normalize(X_train, X_test)
+
+        # train model
+        model, loss = train_model(model, X_train, y_train)
+
+        # val model
+        loss = run_epoch(model, X_test, y_test).data
+        print(f'Fold {count} Loss: {loss:.4f}')
+        fold_losses.append(loss)
+        count += 1
+
+    print("5-Fold MSE losses are:", fold_losses)
+
+
+
+
+
         
-        if k % 1 == 0:
-            print(f"step {k} loss {total_loss.data}")
-        
+
+

@@ -37,29 +37,31 @@ def calculate_mre(y_true, y_pred):
     else:
         return np.nan
 
-k = 5
-fold_indices = kfold_indices(X, k)
-model = LogisticRegression(max_iter = 1000) # TODO: PLACEHOLDER
-scores = []
-mres = []
+if __name__ == "__main__": 
 
-# Iterate through each fold for cross-validation
-for train_indices, test_indices in fold_indices:
-    X_train, y_train = X[train_indices], y[train_indices]
-    X_test, y_test = X[test_indices], y[test_indices]
+    k = 5
+    fold_indices = kfold_indices(X, k)
+    model = LogisticRegression(max_iter = 1000) # TODO: PLACEHOLDER
+    scores = []
+    mres = []
 
-    X_train_normalized, X_test_normalized = normalize(X_train, X_test)
-    
-    model.fit(X_train_normalized, y_train)
-    y_pred = model.predict(X_test_normalized) # PLACEHOLDER
-    
-    fold_score = np.sum(y_test == y_pred) / len(y_test)
-    scores.append(fold_score)
+    # Iterate through each fold for cross-validation
+    for train_indices, test_indices in fold_indices:
+        X_train, y_train = X[train_indices], y[train_indices]
+        X_test, y_test = X[test_indices], y[test_indices]
 
-    fold_mre = calculate_mre(y_test, y_pred)
-    mres.append(fold_mre)
+        X_train_normalized, X_test_normalized = normalize(X_train, X_test)
+        
+        model.fit(X_train_normalized, y_train)
+        y_pred = model.predict(X_test_normalized) # PLACEHOLDER
+        
+        fold_score = np.sum(y_test == y_pred) / len(y_test)
+        scores.append(fold_score)
 
-print("K-Fold Cross-Validation Scores:", scores)
-print("Mean Accuracy:", np.mean(scores))
-print("Mean MRE:", np.nanmean(mres))
-print("MRE Variance:", np.nanvar(mres))
+        fold_mre = calculate_mre(y_test, y_pred)
+        mres.append(fold_mre)
+
+    print("K-Fold Cross-Validation Scores:", scores)
+    print("Mean Accuracy:", np.mean(scores))
+    print("Mean MRE:", np.nanmean(mres))
+    print("MRE Variance:", np.nanvar(mres))
