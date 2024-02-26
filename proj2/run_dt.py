@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 from dt import DecisionTree
 
+# Replace max_depth in Line 43,
+# Then, comment out lines 27 and 52 in dt.py before running
 
 def kfold_indices(data, k):
     fold_size = len(data) // k
