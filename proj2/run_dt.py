@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from sklearn.linear_model import LogisticRegression # TODO: PLACEHOLDER
+from dt import DecisionTree
 
 
 # Load your dataset
@@ -29,39 +29,39 @@ def normalize(train, test):
     test_normalized = (test - mean) / std
     return train_normalized, test_normalized
 
-def calculate_mre(y_true, y_pred):
-    y_true, y_pred = np.array(y_true), np.array(y_pred)
-    nonzero_indices = y_true != 0
-    if len(nonzero_indices) > 0:
-        return np.mean(np.abs((y_true[nonzero_indices] - y_pred[nonzero_indices]) / y_true[nonzero_indices]))
-    else:
-        return np.nan
-
 if __name__ == "__main__": 
+
+    # Load your dataset
+    df = pd.read_csv('data.txt', sep='\t', encoding='utf-16')
+    df = df.sample(frac=1).reset_index(drop=True)
+    X = df.drop('utility', axis=1).values
+    y = df['utility'].apply(lambda x: {'very low': 0, 'low': 1, 'average': 2, 'good': 3, 'great': 4}[x]).values
 
     k = 5
     fold_indices = kfold_indices(X, k)
-    model = LogisticRegression(max_iter = 1000) # TODO: PLACEHOLDER
-    scores = []
-    mres = []
+
+    fold_accuracies = []
 
     # Iterate through each fold for cross-validation
     for train_indices, test_indices in fold_indices:
+        # reset model and creaet train/val split
+        model = DecisionTree(max_depth=5) #TODO: NEED TO RUN ON 2, 3, 4, 5
         X_train, y_train = X[train_indices], y[train_indices]
         X_test, y_test = X[test_indices], y[test_indices]
-
-        X_train_normalized, X_test_normalized = normalize(X_train, X_test)
+        X_train, X_test = normalize(X_train, X_test)
         
-        model.fit(X_train_normalized, y_train)
-        y_pred = model.predict(X_test_normalized) # PLACEHOLDER
+        # train model
+        model.fit(X_train, y_train)
+        y_pred = model.predict(X_test) 
         
-        fold_score = np.sum(y_test == y_pred) / len(y_test)
-        scores.append(fold_score)
+        # calculate accuracy
+        correct_predictions = sum(1 for true, pred in zip(y_test, y_pred_labels) if true == pred)
+        accuracy = correct_predictions / len(y_test)
+        
+        fold_accuracies.append(accuracy)
 
-        fold_mre = calculate_mre(y_test, y_pred)
-        mres.append(fold_mre)
+    mean_accuracy = np.mean(fold_accuracies)
+    accuracy_variance = np.var(fold_accuracies, ddof=1)
 
-    print("K-Fold Cross-Validation Scores:", scores)
-    print("Mean Accuracy:", np.mean(scores))
-    print("Mean MRE:", np.nanmean(mres))
-    print("MRE Variance:", np.nanvar(mres))
+    print(f"K-Fold Cross-Validation Mean Accuracy: {mean_accuracy}")
+    print(f"Accuracy Variance: {accuracy_variance}")
