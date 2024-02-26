@@ -121,10 +121,7 @@ if __name__ == "__main__":
     df = pd.read_csv('orig_data.txt', sep='\t', encoding='utf-8')
     X = df[['t0', 't1', 't2', 't3', 't4', 't5', 't6', 't7', 't8', 't9']].to_numpy()
     y = df['utility'].to_numpy() 
-
-    # normalize design matrix
-    X_train = (X - X.mean(axis=0, keepdims=True)) / X.std(axis=0, keepdims=True)
-   
+    
     # 5-fold cross-validation
     k = 5
     fold_indices = kfold_indices(X_train, k)
