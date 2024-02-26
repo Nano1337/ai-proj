@@ -3,12 +3,6 @@ import numpy as np
 from dt import DecisionTree
 
 
-# Load your dataset
-df = pd.read_csv('data.txt', sep='\t', encoding='utf-16')
-df = df.sample(frac=1).reset_index(drop=True)
-X = df.drop('utility', axis=1).values
-y = df['utility'].apply(lambda x: {'very low': 0, 'low': 1, 'average': 2, 'good': 3, 'great': 4}[x]).values
-
 def kfold_indices(data, k):
     fold_size = len(data) // k
     indices = np.arange(len(data))
@@ -23,8 +17,8 @@ def kfold_indices(data, k):
     return folds
 
 def normalize(train, test):
-    mean = np.mean(train, axis=0)
-    std = np.std(train, axis=0)
+    mean = train.mean()
+    std = train.std()
     train_normalized = (train - mean) / std
     test_normalized = (test - mean) / std
     return train_normalized, test_normalized
@@ -34,7 +28,7 @@ if __name__ == "__main__":
     # Load your dataset
     df = pd.read_csv('data.txt', sep='\t', encoding='utf-16')
     df = df.sample(frac=1).reset_index(drop=True)
-    X = df.drop('utility', axis=1).values
+    X = df.drop('utility', axis=1)
     y = df['utility'].apply(lambda x: {'very low': 0, 'low': 1, 'average': 2, 'good': 3, 'great': 4}[x]).values
 
     k = 5
@@ -43,11 +37,11 @@ if __name__ == "__main__":
     fold_accuracies = []
 
     # Iterate through each fold for cross-validation
-    for train_indices, test_indices in fold_indices:
+    for i, (train_indices, test_indices) in enumerate(fold_indices, 1):
         # reset model and creaet train/val split
         model = DecisionTree(max_depth=5) #TODO: NEED TO RUN ON 2, 3, 4, 5
-        X_train, y_train = X[train_indices], y[train_indices]
-        X_test, y_test = X[test_indices], y[test_indices]
+        X_train, y_train = X.iloc[train_indices], y[train_indices]
+        X_test, y_test = X.iloc[test_indices], y[test_indices]
         X_train, X_test = normalize(X_train, X_test)
         
         # train model
@@ -55,10 +49,12 @@ if __name__ == "__main__":
         y_pred = model.predict(X_test) 
         
         # calculate accuracy
-        correct_predictions = sum(1 for true, pred in zip(y_test, y_pred_labels) if true == pred)
+        correct_predictions = sum(1 for true, pred in zip(y_test, y_pred) if true == pred)
         accuracy = correct_predictions / len(y_test)
         
         fold_accuracies.append(accuracy)
+
+        print(f"Fold {i}: Accuracy = {accuracy}")
 
     mean_accuracy = np.mean(fold_accuracies)
     accuracy_variance = np.var(fold_accuracies, ddof=1)
