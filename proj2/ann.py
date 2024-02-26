@@ -82,20 +82,24 @@ def run_epoch(model, X, y, batch_size=None):
     
     # forward the model to get scores
     scores = list(map(model, inputs))
-
-    # Calculate Mean Squared Error (MSE) Loss
-    losses = [((yi - scorei)**2) for yi, scorei in zip(yb, scores)]
-    total_loss = sum(losses) * (1.0 / len(losses))
     
-    return total_loss
+    if batch_size is None: # for validation
+        mres = [(abs(yi - scorei.data)/yi) for yi, scorei in zip(yb, scores)]
+        return np.mean(np.array(mres))
+
+    else: # for training
+        # Calculate Mean Squared Error (MSE) Loss
+        losses = [((yi - scorei)**2) for yi, scorei in zip(yb, scores)]
+        total_loss = sum(losses) * (1.0 / len(losses))
+        return total_loss
 
 def train_model(model, X_train, y_train): 
     # run training
-    epochs = 100  # Number of training epochs
+    epochs = 75  # Number of training epochs
     learning_rate = 0.1  # Learning rate for weight updates
     batch_size = 250
 
-    for k in tqdm(range(75)):
+    for k in tqdm(range(epochs)):
         
         # forward
         total_loss = run_epoch(model, X_train, y, batch_size=250)
@@ -121,10 +125,10 @@ if __name__ == "__main__":
     df = pd.read_csv('orig_data.txt', sep='\t', encoding='utf-8')
     X = df[['t0', 't1', 't2', 't3', 't4', 't5', 't6', 't7', 't8', 't9']].to_numpy()
     y = df['utility'].to_numpy() 
-    
+
     # 5-fold cross-validation
     k = 5
-    fold_indices = kfold_indices(X_train, k)
+    fold_indices = kfold_indices(X, k)
 
     fold_losses = []
     # NOTE: this takes about 2 minutes to completely run
@@ -140,12 +144,15 @@ if __name__ == "__main__":
         model, loss = train_model(model, X_train, y_train)
 
         # val model
-        loss = run_epoch(model, X_test, y_test).data
-        print(f'Fold {count} Loss: {loss:.4f}')
+        loss = run_epoch(model, X_test, y_test)
+        print(f'Fold {count} MRE Loss: {loss}')
         fold_losses.append(loss)
         count += 1
 
-    print("5-Fold MSE losses are:", fold_losses)
+    fold_losses = np.array(fold_losses)
+    print('The 5 fold MRE losses are:', fold_losses)
+    print(f'Mean of MRE losses: {np.mean(fold_losses)}')
+    print(f'Variance of MRE losses: {np.var(fold_losses)}')
 
 
 
