@@ -1,3 +1,17 @@
+"""
+Team Members (Group 3):
+- Haoli Yin
+- Lydia Liu
+- Richard Song
+- Shreya Reddy
+
+How to Run Code:
+Create a python virtual environment
+Install dependencies (Linux instructions, slightly different for Windows)
+Replace hidden_dim (marked w/ TODO) w/ 4 or 8
+Run code
+```bash 
+"""
 import random
 from backprop import Value
 import pandas as pd
@@ -118,7 +132,7 @@ if __name__ == "__main__":
 
     # ann hyperparameters
     input_dim = 10
-    hidden_dim = [8]
+    hidden_dim = [8] #TODO: Replace w/ 4 or 8
     output_dim = 1
 
     # read and extract data, labels

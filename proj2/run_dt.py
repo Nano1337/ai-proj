@@ -1,9 +1,21 @@
 import pandas as pd
 import numpy as np
 from dt import DecisionTree
+"""
+Team Members (Group 3):
+- Haoli Yin
+- Lydia Liu
+- Richard Song
+- Shreya Reddy
 
-# Replace max_depth in Line 43,
-# Then, comment out lines 27 and 52 in dt.py before running
+How to Run Code:
+Create a python virtual environment
+Install dependencies (Linux instructions, slightly different for Windows)
+Replace max_depth (marked w/ TODO) w/ 2-5
+Then, comment out lines 27 and 52 in dt.py before running
+Run code
+```bash 
+"""
 
 def kfold_indices(data, k):
     fold_size = len(data) // k
@@ -41,7 +53,7 @@ if __name__ == "__main__":
     # Iterate through each fold for cross-validation
     for i, (train_indices, test_indices) in enumerate(fold_indices, 1):
         # reset model and creaet train/val split
-        model = DecisionTree(max_depth=5) #TODO: NEED TO RUN ON 2, 3, 4, 5
+        model = DecisionTree(max_depth=5) #TODO: Replace with 2-5
         X_train, y_train = X.iloc[train_indices], y[train_indices]
         X_test, y_test = X.iloc[test_indices], y[test_indices]
         X_train, X_test = normalize(X_train, X_test)
