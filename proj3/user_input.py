@@ -2,6 +2,10 @@ import pandas as pd
 import textwrap
 
 def get_states(): 
+    """
+    Returns: 
+        - states: list of deduplicated, two-character states present in the cities list from the locations csv
+    """
     cities = pd.read_csv("road_network_locs.csv")['Location Label'].tolist()
     states = set()
     for city in cities: 
@@ -9,6 +13,11 @@ def get_states():
     return states
 
 def include_exclude(): 
+    """
+    Returns: 
+        - include: list of included states
+        - exclude: list of excluded states
+    """
     include = set()
     exclude = set()
 
