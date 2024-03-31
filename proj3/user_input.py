@@ -1,18 +1,44 @@
 import pandas as pd
 import textwrap
 
+def get_cities(): 
+    return pd.read_csv("road_network_locs.csv")['Location Label'].tolist()
+
 def get_states(): 
     """
     Returns: 
         - states: list of deduplicated, two-character states present in the cities list from the locations csv
     """
-    cities = pd.read_csv("road_network_locs.csv")['Location Label'].tolist()
+    cities = get_cities()
     states = set()
     for city in cities: 
         states.add(city[-2:])
     return states
 
-def include_exclude(): 
+def include_exclude_cities(): 
+    include_states, exclude_states = include_exclude_states()
+    cities = get_cities()
+
+    include_cities = []
+    exclude_cities = []
+    
+    for city in cities:
+        # Extract the state abbreviation from the last two characters of the city string
+        state_abbr = city[-2:]
+        
+        # If the state is in the include list and not in the exclude list, add to include_cities
+        if state_abbr in include_states and state_abbr not in exclude_states:
+            include_cities.append(city)
+        
+        # If the state is in the exclude list, add to exclude_cities
+        elif state_abbr in exclude_states:
+            exclude_cities.append(city)
+    
+    return include_cities, exclude_cities
+
+    
+
+def include_exclude_states(): 
     """
     Returns: 
         - include: list of included states
@@ -86,6 +112,8 @@ def include_exclude():
     return include, exclude
 
 if __name__ == "__main__": 
-    include, exclude = include_exclude()
-    print(include, exclude)
+    # include, exclude = include_exclude()
+    # print(include, exclude)
+
+    print(include_exclude_cities())
     
