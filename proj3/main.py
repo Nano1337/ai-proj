@@ -26,10 +26,12 @@ import pandas as pd
 import numpy as np
 from queue import PriorityQueue
 import time 
+from create_loc_features import generate_location_vector
 
 # global variable: edge_map is a dictionary mapping out the edges as sets to their distances 
 edge_map = dict() 
 locations = list()
+edges = list() 
 all_trip_prefs = list()
 # all_runtimes = list()
 adjacency_list = {}
@@ -38,6 +40,10 @@ edge_prefs = {}
 locs_df = None
 edges_df = None
 total_distance = 0
+
+# global variables for location and edge utilities
+location_utilities = dict()
+edge_utilities = dict()
 
 
 """
@@ -238,7 +244,7 @@ params:
     - resultFile: solution path and summary of the entire roadtrip
 """
 def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
-    global edge_map, locations, loc_prefs, edge_prefs, locs_df, edges_df, adjacency_list
+    global edge_map, locations, loc_prefs, edge_prefs, locs_df, edges_df, adjacency_list, edges 
 
     # read in the csv files and construct edge_map 
     locs_df = pd.read_csv(locFile)
@@ -249,7 +255,7 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
     locB = list(edges_df["locationB"])
 
     locations = list(locs_df["Location Label"])
-    
+    edges = list(edges_df["edgeLabel"])
 
     for i in range(len(locA)): 
         A = locA[i]
@@ -346,9 +352,33 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
             new_roadtrip.append(frozenset([curr_loc, neighbor]))
             pq.put((-1*total_preference(new_roadtrip), new_roadtrip, time_estimate(new_roadtrip, x_mph), elt[3] + [neighbor]))
 
+'''
+generate_utilities: generates the utility vectors for locations and edges. most locations will have a utility 
+vector that is specified by the number of themes that the location has. The edge utility vector is randomly generated.
+
+params:
+- None
+'''
+def generate_utilities():
+    global locations, edges, location_utilities, edge_utilities 
+
+    # first get the utility vectors that were provided for us by the dataset 
+    utility_dictionary = generate_location_vector() 
+
+    # next, parse through all of the locations. If they are already in the utility_vector, 
+    # then we add them to the location_utilities dictionary. If not, we assign them 0 utility.
+
+    for loc in locations:
+        if loc in utility_dictionary:
+            location_utilities[loc] = utility_dictionary[loc]
+        else:
+            location_utilities[loc] = np.zeros(67) # 67 is the number of themes in the dataset
     
-    
-    
+    # assign the edges random utility values 
+    for edge in edges:
+        # vector of 67 random values between 0 and 1
+        edge_utilities[edge] = np.random.uniform(0, 1, 67)
+
 
 def main(): 
     RoundTripRoadTrip("NashvilleTN", "road_network_locs.csv", "road_network_edges.csv", 20, 50, "result.csv")
