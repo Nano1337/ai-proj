@@ -12,7 +12,7 @@ import numpy as np
 
 - utility += 0.1*landmark + 0.1*environment (additive)
 
-- if there is both landmark and garden, utility -= 0.1 (substitution effect: landmark and garden < landmark only + garden only)
+- if there is both walking and nightlife, utility -= 0.1 (substitution effect: nightlife and walking < nightlife only + walking only)
 
 For this regression tree, we will use the following rules:
 params: 
@@ -38,8 +38,8 @@ def calc_edge_utility(edges_vector):
     # Second rule: landmark and environment (additive)
     utility += 0.1*edges_vector[7] + 0.1*edges_vector[5]
 
-    # Third rule: landmark and garden (substitution effect)
-    if location_vector[7] == 1 and location_vector[16] == 1:
+    # Third rule: nightlife and walking (substitution effect)
+    if location_vector[53] == 1 and location_vector[9] == 1:
         utility -= 0.1
     
     return utility
