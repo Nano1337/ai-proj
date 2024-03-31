@@ -177,12 +177,10 @@ def print_roundtrip(output, speed, file_counter, startLoc, maxTime):
     print(output)
     '''
     global total_distance
-
-    output_file = f"resultFile{file_counter}.csv"
     total_distance = 0
     
     # write to the end of the output file 
-    with open(output_file, "w") as f: 
+    with open("resultFile.csv", "a") as f: 
         f.write(f'Solution: {file_counter}, Start Location: {startLoc}, Max Time: {maxTime} hrs, Speed: {speed} mph\n\n')
         print(f'\n\nSolution: {file_counter}, Start Location: {startLoc}, Max Time: {maxTime} hrs, Speed: {speed} mph\n')
 
@@ -214,7 +212,7 @@ def print_summary(trip_pref_list, all_runtimes):
     avg_pref = sum(trip_pref_list) / len(trip_pref_list) if trip_pref_list else 0
     min_pref = min(trip_pref_list)
 
-    with open(f"resultFile.csv", "w") as f:
+    with open(f"resultFile.csv", "a") as f:
         f.write(f'Summary File\n\n')
         f.write(f'Average instrumented runtime of all continuations of the search: {avg_runtime} seconds\n\n')
         f.write(f'Maximum Total Trip Preference found across all solution paths: {max_pref}\n\n')
@@ -283,6 +281,10 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
     all_runtimes = list()
     file_counter = 1
 
+    # clear/create new resultFile.csv
+    with open("resultFile.csv", "w") as f:
+        f.write("")
+
     start_time = time.time()
     pause_time = 0
 
@@ -304,9 +306,10 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
             print_roundtrip(elt[3], x_mph, file_counter, startLoc, maxTime)
             total_pref = total_preference(curr_roadtrip)
             all_trip_prefs.append(total_pref)
-            with open(f"resultFile{file_counter}.csv", "a") as f: 
-                f.write(f'Start Location: {startLoc}, Total Trip Preference: {total_pref} , Total Trip Distance: {total_distance} miles, Total Trip Time: {time_estimate(curr_roadtrip, x_mph)} hrs')
-            print(f'Start Location: {startLoc}, Total Trip Preference: {total_pref} , Total Trip Distance: {total_distance} miles, Total Trip Time: {time_estimate(curr_roadtrip, x_mph)} hrs\n\n')
+
+            with open(f"resultFile.csv", "a") as f: 
+                f.write(f'Start Location: {startLoc}, Total Trip Preference: {total_pref} , Total Trip Distance: {total_distance} miles, Total Trip Time: {time_estimate(curr_roadtrip, x_mph)} hrs\n\n\n\n')
+            print(f'Start Location: {startLoc}, Total Trip Preference: {total_pref} , Total Trip Distance: {total_distance} miles, Total Trip Time: {time_estimate(curr_roadtrip, x_mph)} hrs\n\n\n\n')
 
             file_counter +=1
             
@@ -320,6 +323,8 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
                 search_time = end_time - start_time - pause_time
                 print(f"search time: {search_time} seconds")
                 all_runtimes.append(search_time)
+                start_time = time.time()
+                pause_time = 0
                 continue 
             else:
                 # current_time = time.time() 
@@ -330,6 +335,8 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
                 print(f"search time: {search_time} seconds")
                 all_runtimes.append(search_time)
                 print_summary(all_trip_prefs, all_runtimes)
+                start_time = time.time()
+                pause_time = 0
                 break
             
             
