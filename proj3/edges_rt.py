@@ -16,12 +16,12 @@ import numpy as np
 
 For this regression tree, we will use the following rules:
 params: 
-- edges_vector: the feature vector for an edge. This is a numpy array of size 1 x n 
+- edge_vector: the feature vector for an edge. This is a numpy array of size 1 x n 
 where n is the number of themes in the dataset. 
 '''
-def calc_edge_utility(edges_vector):
-  # regression tree for calculating utility of an edge 
-   utility = 0.1  # Starting with a base utility
+def calc_edge_utility(edge_vector):
+    # regression tree for calculating utility of an edge 
+    utility = 0.1  # Starting with a base utility
 
     # Applying regression tree rules based on theme presence
     if edge_vector[64] == 0:
@@ -36,10 +36,10 @@ def calc_edge_utility(edges_vector):
             utility = 0.6
 
     # Second rule: landmark and environment (additive)
-    utility += 0.1*edges_vector[7] + 0.1*edges_vector[5]
+    utility += 0.1*edge_vector[7] + 0.1*edge_vector[5]
 
     # Third rule: nightlife and walking (substitution effect)
-    if location_vector[53] == 1 and location_vector[9] == 1:
+    if edge_vector[53] == 1 and edge_vector[9] == 1:
         utility -= 0.1
-    
+
     return utility
