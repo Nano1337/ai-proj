@@ -28,7 +28,7 @@ from queue import PriorityQueue
 import time 
 from create_loc_features import generate_location_vector
 from location_rt import calc_location_utility
-from user_input import include_exclude, include_exclude_cities 
+from user_input import include_exclude_cities 
 
 # global variable: edge_map is a dictionary mapping out the edges as sets to their distances 
 edge_map = dict() 
@@ -63,7 +63,7 @@ def location_preference_assignments(a, b):
     global locations, loc_prefs
     loc_prefs = {}
     for loc in locations:
-        loc_prefs[loc] = calc_location_utility(location_utilities[loc])
+        loc_prefs[loc] = calc_location_utility(location_utilities[loc], loc, include)
     return loc_prefs
 
 """
@@ -116,6 +116,7 @@ def total_preference(roadtrip):
         total_edge_val += get_edge_pref(edge)
 
     locs_list = list(locs)
+
     for loc in locs_list: 
         total_loc_val += loc_prefs[loc]
 
@@ -190,7 +191,7 @@ def print_roundtrip(output, speed, file_counter, startLoc, maxTime):
     total_distance = 0
     
     # write to the end of the output file 
-    with open("resultFile.csv", "a") as f: 
+    with open("proj3/resultFile.csv", "a") as f: 
         f.write(f'Solution: {file_counter}, Start Location: {startLoc}, Max Time: {maxTime} hrs, Speed: {speed} mph\n\n')
         print(f'\n\nSolution: {file_counter}, Start Location: {startLoc}, Max Time: {maxTime} hrs, Speed: {speed} mph\n')
 
@@ -222,7 +223,7 @@ def print_summary(trip_pref_list, all_runtimes):
     avg_pref = sum(trip_pref_list) / len(trip_pref_list) if trip_pref_list else 0
     min_pref = min(trip_pref_list)
 
-    with open(f"resultFile.csv", "a") as f:
+    with open(f"proj3/resultFile.csv", "a") as f:
         f.write(f'Summary File\n\n')
         f.write(f'Average instrumented runtime of all continuations of the search: {avg_runtime} seconds\n\n')
         f.write(f'Maximum Total Trip Preference found across all solution paths: {max_pref}\n\n')
@@ -282,11 +283,12 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
             adjacency_list[locB].append(locA)  
     
     generate_utilities() 
-    include_states, exclude_states = include_exclude()
-    include_cities, exclude_cities = include_exclude_cities() 
+    include, exclude = include_exclude_cities()
+
     # assign preference values 
     location_preference_assignments(0, 1)
     edge_preference_assignments(0, 0.1)
+
     # do priority search 
     pq = PriorityQueue()
     pq.put((-1*loc_prefs[startLoc], [frozenset([startLoc])], 0, [startLoc]))
@@ -305,8 +307,8 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
 
         # print(list(pq.queue))
         elt = pq.get()
-        print(elt)
         curr_roadtrip = elt[1]
+        #print(elt[3])
 
         if elt[2] > maxTime: 
             continue 
@@ -314,7 +316,9 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
         curr_loc = elt[3][-1]
         #print(elt)
 
-        if (curr_loc == startLoc and len(curr_roadtrip) > 1 and all(elem in curr_roadtrip for elem in include)):
+        if (curr_loc == startLoc and len(curr_roadtrip) > 1):
+            if not all(elem in elt[3] for elem in include): 
+                continue 
             #print("reached")
             print_roundtrip(elt[3], x_mph, file_counter, startLoc, maxTime)
             total_pref = total_preference(curr_roadtrip)
@@ -359,8 +363,12 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
                 continue
             new_roadtrip = curr_roadtrip.copy()
             new_roadtrip.append(frozenset([curr_loc, neighbor]))
-            pq.put((-1*total_preference(new_roadtrip), new_roadtrip, time_estimate(new_roadtrip, x_mph), elt[3] + [neighbor]))
-
+            # check if neighbor would complete a roundtrip 
+            pref = -1*total_preference(new_roadtrip)
+            if neighbor == startLoc: # give priority to roundtrips
+                pref -= loc_prefs[startLoc]
+            pq.put((pref, new_roadtrip, time_estimate(new_roadtrip, x_mph), elt[3] + [neighbor]))
+            #print((-1*total_preference(new_roadtrip), new_roadtrip, time_estimate(new_roadtrip, x_mph), elt[3] + [neighbor]))
 '''
 generate_utilities: generates the utility vectors for locations and edges. most locations will have a utility 
 vector that is specified by the number of themes that the location has. The edge utility vector is randomly generated.
@@ -390,7 +398,7 @@ def generate_utilities():
 
 
 def main(): 
-    RoundTripRoadTrip("NashvilleTN", "proj3/road_network_locs.csv", "proj3/road_network_edges.csv", 20, 50, "result.csv")
+    RoundTripRoadTrip("CharlestonWV", "proj3/road_network_locs.csv", "proj3/road_network_edges.csv", 200, 50, "result.csv")
 
     ''' 
     random test 

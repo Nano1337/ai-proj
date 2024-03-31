@@ -1,0 +1,93 @@
+Solution: 1, Start Location: CharlestonWV, Max Time: 200 hrs, Speed: 50 mph
+
+1. CharlestonWV, HuntingtonWV, CharlestonWV_tofrom_HuntingtonWV, 0.03442613014781202, 1.06, 10.1, 101.0 
+
+2. HuntingtonWV, FairmontWV, HuntingtonWV_tofrom_FairmontWV_on_I64E_and_I79N, 0.08367720659402143, 3.82, 10.1, 101.0 
+
+3. FairmontWV, CharlestonWV, FairmontWV_tofrom_CharlestonWV, 0.010115108822100417, 2.8, 10.1, 101.0 
+
+Solution: 2, Start Location: CharlestonWV, Max Time: 200 hrs, Speed: 50 mph
+
+1. CharlestonWV, HuntingtonWV, CharlestonWV_tofrom_HuntingtonWV, 0.03442613014781202, 1.06, 10.1, 101.0 
+
+2. HuntingtonWV, FairmontWV, HuntingtonWV_tofrom_FairmontWV_on_I64E_and_I79N, 0.08367720659402143, 3.82, 10.1, 101.0 
+
+3. FairmontWV, HuntingtonWV, HuntingtonWV_tofrom_FairmontWV_on_I64E_and_I79N, 0.08367720659402143, 3.82, 10.1, 101.0 
+
+4. HuntingtonWV, CharlestonWV, CharlestonWV_tofrom_HuntingtonWV, 0.03442613014781202, 1.06, 10.1, 101.0 
+
+Solution: 3, Start Location: CharlestonWV, Max Time: 200 hrs, Speed: 50 mph
+
+1. CharlestonWV, HuntingtonWV, CharlestonWV_tofrom_HuntingtonWV, 0.03442613014781202, 1.06, 10.1, 101.0 
+
+2. HuntingtonWV, FairmontWV, HuntingtonWV_tofrom_FairmontWV_on_I64E_and_I79N, 0.08367720659402143, 3.82, 10.1, 101.0 
+
+3. FairmontWV, HuntingtonWV, HuntingtonWV_tofrom_FairmontWV_on_I64E_and_I79N, 0.08367720659402143, 3.82, 10.1, 101.0 
+
+4. HuntingtonWV, LouisvilleKY, LouisvilleKY_tofrom_HuntingtonWV_on_I64E, 0.056227967836028736, 3.94, 0.1, 1.0 
+
+5. LouisvilleKY, CincinnatiOH, Cincinnati_tofrom_Lousville, 0.069734470287017, 2.0, 0.1, 1.0 
+
+6. CincinnatiOH, ToledoOH, CincinnatiOH_tofrom_ToledoOH, 0.0877167321501943, 3.58, 0.1, 1.0 
+
+7. ToledoOH, ChicagoIL, ChicagoIL_tofrom_ToledoOH, 0.05322898394505835, 3.22, 0.8, 8.0 
+
+8. ChicagoIL, MadisonWI, Chicago_tofrom_Madison_on_I88, 0.09231332947400017, 2.96, 0.1, 1.0 
+
+9. MadisonWI, MilwaukeeWI, MilwaukeeWI_tofrom_MadisonWI, 0.0027172936687732355, 1.59, 0.1, 1.0 
+
+10. MilwaukeeWI, GreenBayWI, MilwaukeeWI_tofrom_GreenBayWI, 0.08174579092365064, 2.34, 0.1, 1.0 
+
+11. GreenBayWI, MilwaukeeWI, MilwaukeeWI_tofrom_GreenBayWI, 0.08174579092365064, 2.34, 0.1, 1.0 
+
+12. MilwaukeeWI, GreenBayWI, MilwaukeeWI_tofrom_GreenBayWI, 0.08174579092365064, 2.34, 0.1, 1.0 
+
+13. GreenBayWI, MilwaukeeWI, MilwaukeeWI_tofrom_GreenBayWI, 0.08174579092365064, 2.34, 0.1, 1.0 
+
+14. MilwaukeeWI, GreenBayWI, MilwaukeeWI_tofrom_GreenBayWI, 0.08174579092365064, 2.34, 0.1, 1.0 
+
+15. GreenBayWI, MilwaukeeWI, MilwaukeeWI_tofrom_GreenBayWI, 0.08174579092365064, 2.34, 0.1, 1.0 
+
+16. MilwaukeeWI, GreenBayWI, MilwaukeeWI_tofrom_GreenBayWI, 0.08174579092365064, 2.34, 0.1, 1.0 
+
+17. GreenBayWI, MilwaukeeWI, MilwaukeeWI_tofrom_GreenBayWI, 0.08174579092365064, 2.34, 0.1, 1.0 
+
+18. MilwaukeeWI, GreenBayWI, MilwaukeeWI_tofrom_GreenBayWI, 0.08174579092365064, 2.34, 0.1, 1.0 
+
+19. GreenBayWI, MilwaukeeWI, MilwaukeeWI_tofrom_GreenBayWI, 0.08174579092365064, 2.34, 0.1, 1.0 
+
+20. MilwaukeeWI, GreenBayWI, MilwaukeeWI_tofrom_GreenBayWI, 0.08174579092365064, 2.34, 0.1, 1.0 
+
+21. GreenBayWI, MilwaukeeWI, MilwaukeeWI_tofrom_GreenBayWI, 0.08174579092365064, 2.34, 0.1, 1.0 
+
+22. MilwaukeeWI, GreenBayWI, MilwaukeeWI_tofrom_GreenBayWI, 0.08174579092365064, 2.34, 0.1, 1.0 
+
+23. GreenBayWI, MilwaukeeWI, MilwaukeeWI_tofrom_GreenBayWI, 0.08174579092365064, 2.34, 0.1, 1.0 
+
+24. MilwaukeeWI, GreenBayWI, MilwaukeeWI_tofrom_GreenBayWI, 0.08174579092365064, 2.34, 0.1, 1.0 
+
+25. GreenBayWI, MilwaukeeWI, MilwaukeeWI_tofrom_GreenBayWI, 0.08174579092365064, 2.34, 0.1, 1.0 
+
+26. MilwaukeeWI, ChicagoIL, ChicagoIL_tofrom_MilwaukeeWI, 0.014241084708674169, 1.8419999999999999, 0.8, 8.0 
+
+27. ChicagoIL, IndianapolisIN, Chicago_tofrom_Indianapolis, 0.03264140613050485, 3.66, 0.1, 1.0 
+
+28. IndianapolisIN, BloomingtonIN, BloomingtonIN_tofrom_IndianapolisIN, 0.04118784146280281, 1.02, 0.1, 1.0 
+
+29. BloomingtonIN, IndianapolisIN, BloomingtonIN_tofrom_IndianapolisIN, 0.04118784146280281, 1.02, 0.1, 1.0 
+
+30. IndianapolisIN, CincinnatiOH, Cincinnati_tofrom_Indianapolis, 0.049179087036624936, 2.24, 0.1, 1.0 
+
+31. CincinnatiOH, HuntingtonWV, CincinnatiOH_tofrom_HuntingtonWV_on_KY-9S, 0.015704257067133676, 2.94, 10.1, 101.0 
+
+32. HuntingtonWV, CharlestonWV, CharlestonWV_tofrom_HuntingtonWV, 0.03442613014781202, 1.06, 10.1, 101.0 
+
+Summary File
+
+Average instrumented runtime of all continuations of the search: 0.02976115544637044 seconds
+
+Maximum Total Trip Preference found across all solution paths: 34.0002196234917
+
+Average Total Trip Preference found across all solution paths: 31.654881580846432
+
+Minimum Total Trip Preference found across all solution paths: 30.42821844556393

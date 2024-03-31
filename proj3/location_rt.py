@@ -25,21 +25,23 @@ params:
 where n is the number of themes in the dataset. 
 '''
 
-def calc_location_utility(location_vector):
+def calc_location_utility(location_vector, location_name, inclusion_list):
     # regression tree for calculating utility of a location 
     utility = 0
+    if location_name in inclusion_list:
+        utility += 10
 
     # First rule: parks and walking (complement effect)
     if location_vector[3] == 0:
         if location_vector[9] == 0:
-            utility = 0.1
+            utility += 0.1
         else:
-            utility = 0.3
+            utility += 0.3
     else:
         if location_vector[9] == 0:
-            utility = 0.4
+            utility += 0.4
         else:
-            utility = 0.8
+            utility += 0.8
     
     # Second rule: history and music (additive)
     utility += 0.1*location_vector[0] + 0.1*location_vector[1]
