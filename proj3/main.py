@@ -283,8 +283,10 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
     all_runtimes = list()
     file_counter = 1
 
+    start_time = time.time()
+    pause_time = 0
+
     while pq.qsize() > 0: 
-        start_time = time.time() 
 
         # print(list(pq.queue))
         elt = pq.get()
@@ -307,25 +309,39 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
             print(f'Start Location: {startLoc}, Total Trip Preference: {total_pref} , Total Trip Distance: {total_distance} miles, Total Trip Time: {time_estimate(curr_roadtrip, x_mph)} hrs\n\n')
 
             file_counter +=1
-            end_time = time.time()
-            search_time = end_time - start_time
-            all_runtimes.append(search_time)
-
+            
 
             
+            pause_start = time.time()
             if (input("Should another solution be returned? ") == "yes"):
-                current_time = time.time()
+                pause_end = time.time()
+                pause_time += pause_end - pause_start
+                end_time = time.time()
+                search_time = end_time - start_time - pause_time
+                print(f"search time: {search_time} seconds")
+                all_runtimes.append(search_time)
                 continue 
             else:
                 # current_time = time.time() 
+                pause_end = time.time()
+                pause_time += pause_end - pause_start
+                end_time = time.time()
+                search_time = end_time - start_time - pause_time
+                print(f"search time: {search_time} seconds")
+                all_runtimes.append(search_time)
                 print_summary(all_trip_prefs, all_runtimes)
                 break
-
+            
+            
 
         for neighbor in adjacency_list[curr_loc]: 
             new_roadtrip = curr_roadtrip.copy()
             new_roadtrip.append(frozenset([curr_loc, neighbor]))
             pq.put((-1*total_preference(new_roadtrip), new_roadtrip, time_estimate(new_roadtrip, x_mph), elt[3] + [neighbor]))
+
+    
+    
+    
 
 def main(): 
     RoundTripRoadTrip("NashvilleTN", "road_network_locs.csv", "road_network_edges.csv", 20, 50, "result.csv")
