@@ -29,7 +29,9 @@ def generate_location_vector():
 # find the most common theme in the dataset
 
 vect = generate_location_vector()
-themes = np.zeros(1, len(vect["NashvilleTN"]))
+themes = np.zeros((1, len(vect["NashvilleTN"])))
 
 for key in vect:
     themes += vect[key]
+
+print(themes)
