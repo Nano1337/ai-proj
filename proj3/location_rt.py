@@ -3,7 +3,7 @@
 import numpy as np 
 
 '''
-location_utility: function to calculate the utility of a location based on the regression tree
+calc_location_utility: function to calculate the utility of a location based on the regression tree
 
 For this regression tree, we will use the following rules:
 
@@ -24,7 +24,8 @@ params:
 - location_vector: the feature vector for a location. This is a numpy array of size 1 x n 
 where n is the number of themes in the dataset. 
 '''
-def location_utility(location_vector):
+
+def calc_location_utility(location_vector):
     # regression tree for calculating utility of a location 
     utility = 0
 

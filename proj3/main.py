@@ -27,6 +27,7 @@ import numpy as np
 from queue import PriorityQueue
 import time 
 from create_loc_features import generate_location_vector
+from location_rt import calc_location_utility
 
 # global variable: edge_map is a dictionary mapping out the edges as sets to their distances 
 edge_map = dict() 
@@ -59,7 +60,7 @@ def location_preference_assignments(a, b):
     global locations, loc_prefs
     loc_prefs = {}
     for loc in locations:
-        loc_prefs[loc] = np.random.uniform(a, b)
+        loc_prefs[loc] = calc_location_utility(location_utilities[loc])
     return loc_prefs
 
 """
