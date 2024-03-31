@@ -28,7 +28,8 @@ from queue import PriorityQueue
 import time 
 from create_loc_features import generate_location_vector
 from location_rt import calc_location_utility
-from user_input import include_exclude_cities 
+from user_input import include_exclude_cities
+from edges_rt import calc_edge_utility
 
 # global variable: edge_map is a dictionary mapping out the edges as sets to their distances 
 edge_map = dict() 
@@ -79,7 +80,7 @@ def edge_preference_assignments(a=0, b=0.1):
     global edge_map, edge_prefs
     edge_prefs = {}
     for edges in edge_map:
-        edge_prefs[edges] = np.random.uniform(a, b)
+        edge_prefs[edges] = calc_edge_utility(edge_utilities[edges])
     return edge_prefs
 
 """
