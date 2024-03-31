@@ -2,7 +2,7 @@ import pandas as pd
 import textwrap
 
 def get_states(): 
-    cities = pd.read_csv("road_network_locs.csv")['Location Label'].tolist()
+    cities = pd.read_csv("proj3/road_network_locs.csv")['Location Label'].tolist()
     states = set()
     for city in cities: 
         states.add(city[-2:])

@@ -3,8 +3,8 @@ import pandas as pd
 import numpy as np
 
 def generate_location_vector():
-    attractions_df = pd.read_csv('road_network_attractions.csv')
-    themes_df = pd.read_csv('road_network_themes.csv')
+    attractions_df = pd.read_csv('proj3/road_network_attractions.csv')
+    themes_df = pd.read_csv('proj3/road_network_themes.csv')
 
     themes_list = themes_df.iloc[:, 0].tolist()
     themes_list = [theme.replace(" ", "") for theme in themes_list]

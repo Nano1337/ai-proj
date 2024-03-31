@@ -12,7 +12,7 @@ For this regression tree, we will use the following rules:
     - if there is a walking theme, the utility is 0.3 
 - if there is a park theme, we will check
     - if there is not a walking theme, the utility is 0.4
-    - if there is a walking theme, the utility is 0.6 (complement effect: park and walking > park only + walking only)
+    - if there is a walking theme, the utility is 0.8 (complement effect: park and walking > park only + walking only)
 
 - utility += 0.1*history + 0.1*music (additive)
 
@@ -39,7 +39,7 @@ def calc_location_utility(location_vector):
         if location_vector[9] == 0:
             utility = 0.4
         else:
-            utility = 0.6
+            utility = 0.8
     
     # Second rule: history and music (additive)
     utility += 0.1*location_vector[0] + 0.1*location_vector[1]

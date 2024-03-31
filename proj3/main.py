@@ -28,12 +28,15 @@ from queue import PriorityQueue
 import time 
 from create_loc_features import generate_location_vector
 from location_rt import calc_location_utility
+from user_input import include_exclude, include_exclude_cities 
 
 # global variable: edge_map is a dictionary mapping out the edges as sets to their distances 
 edge_map = dict() 
 locations = list()
 edges = list() 
 all_trip_prefs = list()
+include = list()
+exclude = list() 
 # all_runtimes = list()
 adjacency_list = {}
 loc_prefs= {} 
@@ -245,7 +248,7 @@ params:
     - resultFile: solution path and summary of the entire roadtrip
 """
 def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
-    global edge_map, locations, loc_prefs, edge_prefs, locs_df, edges_df, adjacency_list, edges 
+    global edge_map, locations, loc_prefs, edge_prefs, locs_df, edges_df, adjacency_list, edges, include, exclude 
 
     # read in the csv files and construct edge_map 
     locs_df = pd.read_csv(locFile)
@@ -278,10 +281,12 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
         else:
             adjacency_list[locB].append(locA)  
     
+    generate_utilities() 
+    include_states, exclude_states = include_exclude()
+    include_cities, exclude_cities = include_exclude_cities() 
     # assign preference values 
     location_preference_assignments(0, 1)
     edge_preference_assignments(0, 0.1)
-
     # do priority search 
     pq = PriorityQueue()
     pq.put((-1*loc_prefs[startLoc], [frozenset([startLoc])], 0, [startLoc]))
@@ -295,10 +300,12 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
     start_time = time.time()
     pause_time = 0
 
+
     while pq.qsize() > 0: 
 
         # print(list(pq.queue))
         elt = pq.get()
+        print(elt)
         curr_roadtrip = elt[1]
 
         if elt[2] > maxTime: 
@@ -307,9 +314,8 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
         curr_loc = elt[3][-1]
         #print(elt)
 
-        if (curr_loc == startLoc and len(curr_roadtrip) > 1):
+        if (curr_loc == startLoc and len(curr_roadtrip) > 1 and all(elem in curr_roadtrip for elem in include)):
             #print("reached")
-            
             print_roundtrip(elt[3], x_mph, file_counter, startLoc, maxTime)
             total_pref = total_preference(curr_roadtrip)
             all_trip_prefs.append(total_pref)
@@ -349,6 +355,8 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
             
 
         for neighbor in adjacency_list[curr_loc]: 
+            if neighbor in exclude:
+                continue
             new_roadtrip = curr_roadtrip.copy()
             new_roadtrip.append(frozenset([curr_loc, neighbor]))
             pq.put((-1*total_preference(new_roadtrip), new_roadtrip, time_estimate(new_roadtrip, x_mph), elt[3] + [neighbor]))
@@ -382,7 +390,7 @@ def generate_utilities():
 
 
 def main(): 
-    RoundTripRoadTrip("NashvilleTN", "road_network_locs.csv", "road_network_edges.csv", 20, 50, "result.csv")
+    RoundTripRoadTrip("NashvilleTN", "proj3/road_network_locs.csv", "proj3/road_network_edges.csv", 20, 50, "result.csv")
 
     ''' 
     random test 
