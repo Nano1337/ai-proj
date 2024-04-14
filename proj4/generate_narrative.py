@@ -176,7 +176,7 @@ def give_narrative(roadtrip):
 if __name__ == "__main__": 
 
     # insert roadtrip cities csv here
-    path = "resultFile.csv"
+    path = "resultFile3.csv"
 
     cities = pd.read_csv(path, header=None).values.flatten().tolist()
     print(cities)
@@ -195,6 +195,7 @@ if __name__ == "__main__":
             roadtrip_narrative += f"{city}: [pick random attraction from the city and then describe using chain of thought].\n"
 
     roadtrip_narrative += "Finish out the roadtrip with saying welcome home to " + cities[0] + "! Where you first started your journey." 
+    print(roadtrip_narrative)
     give_narrative(roadtrip_narrative)
     # roadtrip = """
     # Ruby Falls, Chattanooga TN: Today, Ruby Falls welcomes guests to Lookout Mountain from around the world to enjoy underground cave adventures, spectacular views of the Cumberland Plateau, soaring zip lines and award-winning special events! Activities: Hiking, Landmark, Environment, Nature.
