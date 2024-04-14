@@ -1,15 +1,2 @@
-Solution: 1, Start Location: BaltimoreMD, Max Time: 200 hrs, Speed: 50 mph
-
-1. BaltimoreMD, OceanCityMD, BaltimoreMD_tofrom_OceanCityMD, 0.03154178707880937, 2.94, 10.3, 103.0 
-
-2. OceanCityMD, BaltimoreMD, BaltimoreMD_tofrom_OceanCityMD, 0.03154178707880937, 2.94, 10.1, 101.0 
-
-Summary File
-
-Average instrumented runtime of all continuations of the search: 0.0029349327087402344 seconds
-
-Maximum Total Trip Preference found across all solution paths: 20.46308357415762
-
-Average Total Trip Preference found across all solution paths: 20.46308357415762
-
-Minimum Total Trip Preference found across all solution paths: 20.46308357415762
+BaltimoreMD
+OceanCityMD

@@ -1,23 +1,5 @@
-Solution: 1, Start Location: HartfordCT, Max Time: 200 hrs, Speed: 50 mph
-
-1. HartfordCT, BostonMA, BostonMA_tofrom_HartfordCT, 0.027656123667612866, 2.02, 0.4, 4.0 
-
-2. BostonMA, NewHavenCT, Boston_tofrom_NewHaven_on_I95N, 0.07745433286508846, 3.04, 10.1, 101.0 
-
-3. NewHavenCT, MountHollyNJ, MountHollyNJ_tofrom_NewHavenCT_on_I-95N, 0.04603490612166691, 3.06, 0.1, 1.0 
-
-4. MountHollyNJ, NewHavenCT, MountHollyNJ_tofrom_NewHavenCT_on_I-95N, 0.04603490612166691, 3.06, 10.1, 101.0 
-
-5. NewHavenCT, ProvidenceRI, ProvidenceRI_tofrom_NewHavenCT, 0.0031853876788184967, 2.04, 0.1, 1.0 
-
-6. ProvidenceRI, HartfordCT, ProvidenceRI_tofrom_HartfordCT, 0.023840894941392424, 1.45, 10.1, 101.0 
-
-Summary File
-
-Average instrumented runtime of all continuations of the search: 0.00443720817565918 seconds
-
-Maximum Total Trip Preference found across all solution paths: 21.024206551396244
-
-Average Total Trip Preference found across all solution paths: 21.024206551396244
-
-Minimum Total Trip Preference found across all solution paths: 21.024206551396244
+HartfordCT
+BostonMA
+NewHavenCT 
+MountHollyNJ
+ProvidenceRI
