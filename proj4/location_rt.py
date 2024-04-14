@@ -33,19 +33,19 @@ class Node:
 
 # Define conditions
 def has_park(location_vector):
-    return location_vector[3] == 1
+    return location_vector[3] >= 1
 
 def has_walking(location_vector):
-    return location_vector[9] == 1
+    return location_vector[9] >= 1
 
 def has_history(location_vector):
-    return location_vector[0] == 1
+    return location_vector[0] >= 1
 
 def has_music(location_vector):
-    return location_vector[1] == 1
+    return location_vector[1] >= 1
 
 def has_environment(location_vector):
-    return location_vector[5] == 1
+    return location_vector[5] >= 1
 
 def has_environment_and_music(location_vector):
     return has_environment(location_vector) and has_music(location_vector)
