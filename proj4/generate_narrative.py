@@ -15,10 +15,6 @@ Centennial Park, Nashville TN: Centennial Park is one of Nashville's premier par
 Vanderbilt University, Nashville TN: Vanderbilt is a private research university in Nashville, Tennessee. It offers more than 70 undergraduate majors and a full range of graduate and professional degrees across 10 schools and colleges, all on a beautiful campus—an accredited arboretum—complete with athletic facilities and state-of-the-art laboratories. Activities: Building, University, Walking.
 """
 
-# load encoding and check the length of dataset
-encoding = tiktoken.encoding_for_model('gpt-3.5-turbo')
-len(encoding.encode(narrative_data))
-
 # Now you can safely access the OPENAI_API_KEY environment variable
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
@@ -171,10 +167,22 @@ def summarize(text: str,
 
     return final_summary
 
-output = summarize(
-    narrative_data, 
-    detail=0.4, 
-    verbose=True, 
-    additional_instructions="Write in elaborate paragraphs about a roadtrip narrative given these attractions. Include high level of detail. Pretend like you're a tour guide."
-    )
-print(output)
+def give_narrative(roadtrip): 
+    output = summarize(
+        narrative_data, 
+        detail=0.4, 
+        verbose=True, 
+        additional_instructions="Write in elaborate paragraphs about a roadtrip narrative given these attractions. Include high level of detail. Pretend like you're a tour guide."
+        )
+    print(output)
+
+
+if __name__ == "__main__": 
+    roadtrip = """
+    Ruby Falls, Chattanooga TN: Today, Ruby Falls welcomes guests to Lookout Mountain from around the world to enjoy underground cave adventures, spectacular views of the Cumberland Plateau, soaring zip lines and award-winning special events! Activities: Hiking, Landmark, Environment, Nature.
+    Centennial Park, Nashville TN: Centennial Park is one of Nashville's premier parks. Located on West End and 25th Avenue North, the 132-acre features the iconic Parthenon, a one-mile walking trail, Lake Watauga, the Centennial Art Center, historical monuments, an arts activity center, a beautiful sunken garden, a band shell, an events shelter, sand volleyball courts, dog park, and an exercise trail. Thousands of people visit the park each year to visit the museum, see exhibits, attend festivals, and just enjoy the beauty of the park. Activities: Walking, Landmark, Environment, Nature.
+    Vanderbilt University, Nashville TN: Vanderbilt is a private research university in Nashville, Tennessee. It offers more than 70 undergraduate majors and a full range of graduate and professional degrees across 10 schools and colleges, all on a beautiful campus—an accredited arboretum—complete with athletic facilities and state-of-the-art laboratories. Activities: Building, University, Walking.
+    """
+
+    give_narrative(roadtrip)
+
