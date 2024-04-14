@@ -38,21 +38,42 @@ def has_park(location_vector):
 def has_walking(location_vector):
     return location_vector[9] == 1
 
+def has_history(location_vector):
+    return location_vector[0] == 1
+
+def has_music(location_vector):
+    return location_vector[1] == 1
+
+def has_environment(location_vector):
+    return location_vector[5] == 1
+
 def has_environment_and_music(location_vector):
-    return location_vector[5] == 1 and location_vector[1] == 1
+    return has_environment(location_vector) and has_music(location_vector)
 
 # Build tree
 tree = Node(
     condition=has_park,
     true_branch=Node(
         condition=has_walking,
-        true_branch=Node(value=0.8),
-        false_branch=Node(value=0.4)
+        true_branch=Node(
+            condition=has_history,
+            true_branch=Node(
+                condition=has_music,
+                true_branch=Node(
+                    condition=has_environment,
+                    true_branch=Node(value=0.8 + 0.1 + 0.1 - 0.1),  # park, walking, history, music, environment
+                    false_branch=Node(value=0.8 + 0.1 + 0.1)  # park, walking, history, music, no environment
+                ),
+                false_branch=Node(value=0.8 + 0.1)  # park, walking, history, no music
+            ),
+            false_branch=Node(value=0.8)  # park, walking, no history
+        ),
+        false_branch=Node(value=0.4)  # park, no walking
     ),
     false_branch=Node(
         condition=has_walking,
-        true_branch=Node(value=0.3),
-        false_branch=Node(value=0.1)
+        true_branch=Node(value=0.3),  # no park, walking
+        false_branch=Node(value=0.1)  # no park, no walking
     )
 )
 
@@ -70,12 +91,5 @@ def calc_location_utility(location_vector, location_name, inclusion_list):
         else:
             node = node.false_branch
     utility += node.value
-
-    # Second rule: history and music (additive)
-    utility += 0.1*location_vector[0] + 0.1*location_vector[1]
-
-    # Third rule: environment and music (substitution effect)
-    if has_environment_and_music(location_vector):
-        utility -= 0.1
     
     return utility
