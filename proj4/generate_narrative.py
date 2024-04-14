@@ -6,14 +6,10 @@ import tiktoken
 from tqdm import tqdm
 from dotenv import load_dotenv
 
+import pandas as pd
+
 # Load environment variables from .env file
 load_dotenv()
-
-narrative_data = """
-Ruby Falls, Chattanooga TN: Today, Ruby Falls welcomes guests to Lookout Mountain from around the world to enjoy underground cave adventures, spectacular views of the Cumberland Plateau, soaring zip lines and award-winning special events! Activities: Hiking, Landmark, Environment, Nature.
-Centennial Park, Nashville TN: Centennial Park is one of Nashville's premier parks. Located on West End and 25th Avenue North, the 132-acre features the iconic Parthenon, a one-mile walking trail, Lake Watauga, the Centennial Art Center, historical monuments, an arts activity center, a beautiful sunken garden, a band shell, an events shelter, sand volleyball courts, dog park, and an exercise trail. Thousands of people visit the park each year to visit the museum, see exhibits, attend festivals, and just enjoy the beauty of the park. Activities: Walking, Landmark, Environment, Nature.
-Vanderbilt University, Nashville TN: Vanderbilt is a private research university in Nashville, Tennessee. It offers more than 70 undergraduate majors and a full range of graduate and professional degrees across 10 schools and colleges, all on a beautiful campus—an accredited arboretum—complete with athletic facilities and state-of-the-art laboratories. Activities: Building, University, Walking.
-"""
 
 # Now you can safely access the OPENAI_API_KEY environment variable
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -169,7 +165,7 @@ def summarize(text: str,
 
 def give_narrative(roadtrip): 
     output = summarize(
-        narrative_data, 
+        roadtrip, 
         detail=0.4, 
         verbose=True, 
         additional_instructions="Write in elaborate paragraphs about a roadtrip narrative given these attractions. Include high level of detail. Pretend like you're a tour guide."
@@ -178,11 +174,33 @@ def give_narrative(roadtrip):
 
 
 if __name__ == "__main__": 
-    roadtrip = """
-    Ruby Falls, Chattanooga TN: Today, Ruby Falls welcomes guests to Lookout Mountain from around the world to enjoy underground cave adventures, spectacular views of the Cumberland Plateau, soaring zip lines and award-winning special events! Activities: Hiking, Landmark, Environment, Nature.
-    Centennial Park, Nashville TN: Centennial Park is one of Nashville's premier parks. Located on West End and 25th Avenue North, the 132-acre features the iconic Parthenon, a one-mile walking trail, Lake Watauga, the Centennial Art Center, historical monuments, an arts activity center, a beautiful sunken garden, a band shell, an events shelter, sand volleyball courts, dog park, and an exercise trail. Thousands of people visit the park each year to visit the museum, see exhibits, attend festivals, and just enjoy the beauty of the park. Activities: Walking, Landmark, Environment, Nature.
-    Vanderbilt University, Nashville TN: Vanderbilt is a private research university in Nashville, Tennessee. It offers more than 70 undergraduate majors and a full range of graduate and professional degrees across 10 schools and colleges, all on a beautiful campus—an accredited arboretum—complete with athletic facilities and state-of-the-art laboratories. Activities: Building, University, Walking.
-    """
 
-    give_narrative(roadtrip)
+    # insert roadtrip cities csv here
+    path = "resultFile.csv"
+
+    cities = pd.read_csv(path, header=None).values.flatten().tolist()
+    print(cities)
+
+    # read in road_network_attractions.csv
+    attractions = pd.read_csv("road_network_attractions.csv")
+    roadtrip_narrative = ""
+    for city in cities:
+        # Filter attractions for the current city
+        found = attractions[attractions["Loc or Edge Label"] == city]
+        city_attractions = found["Attraction Label"].tolist()
+        description = found["Description"].tolist()
+        if city_attractions:
+            roadtrip_narrative += f"{city}: " + ", ".join(city_attractions) + ", ".join(description) + ".\n"
+        else:
+            roadtrip_narrative += f"{city}: [pick random attraction from the city and then describe using chain of thought].\n"
+
+    roadtrip_narrative += "Finish out the roadtrip with saying welcome home to " + cities[0] + "! Where you first started your journey." 
+    give_narrative(roadtrip_narrative)
+    # roadtrip = """
+    # Ruby Falls, Chattanooga TN: Today, Ruby Falls welcomes guests to Lookout Mountain from around the world to enjoy underground cave adventures, spectacular views of the Cumberland Plateau, soaring zip lines and award-winning special events! Activities: Hiking, Landmark, Environment, Nature.
+    # Centennial Park, Nashville TN: Centennial Park is one of Nashville's premier parks. Located on West End and 25th Avenue North, the 132-acre features the iconic Parthenon, a one-mile walking trail, Lake Watauga, the Centennial Art Center, historical monuments, an arts activity center, a beautiful sunken garden, a band shell, an events shelter, sand volleyball courts, dog park, and an exercise trail. Thousands of people visit the park each year to visit the museum, see exhibits, attend festivals, and just enjoy the beauty of the park. Activities: Walking, Landmark, Environment, Nature.
+    # Vanderbilt University, Nashville TN: Vanderbilt is a private research university in Nashville, Tennessee. It offers more than 70 undergraduate majors and a full range of graduate and professional degrees across 10 schools and colleges, all on a beautiful campus—an accredited arboretum—complete with athletic facilities and state-of-the-art laboratories. Activities: Building, University, Walking.
+    # """
+
+    # give_narrative(roadtrip)
 
