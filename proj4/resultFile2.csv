@@ -1,0 +1,17 @@
+Solution: 1, Start Location: CharlestonWV, Max Time: 200 hrs, Speed: 50 mph
+
+1. CharlestonWV, FairmontWV, FairmontWV_tofrom_CharlestonWV, 0.09160691086826474, 2.8, 10.1, 101.0 
+
+2. FairmontWV, HuntingtonWV, HuntingtonWV_tofrom_FairmontWV_on_I64E_and_I79N, 0.054621533498193535, 3.82, 10.1, 101.0 
+
+3. HuntingtonWV, CharlestonWV, CharlestonWV_tofrom_HuntingtonWV, 0.016859327677170455, 1.06, 10.1, 101.0 
+
+Summary File
+
+Average instrumented runtime of all continuations of the search: 0.004821300506591797 seconds
+
+Maximum Total Trip Preference found across all solution paths: 30.463087772043625
+
+Average Total Trip Preference found across all solution paths: 30.463087772043625
+
+Minimum Total Trip Preference found across all solution paths: 30.463087772043625

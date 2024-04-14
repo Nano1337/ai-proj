@@ -192,7 +192,7 @@ def print_roundtrip(output, speed, file_counter, startLoc, maxTime):
     total_distance = 0
     
     # write to the end of the output file 
-    with open("proj3/resultFile3.csv", "a") as f: 
+    with open("proj4/resultFile.csv", "a") as f: 
         f.write(f'Solution: {file_counter}, Start Location: {startLoc}, Max Time: {maxTime} hrs, Speed: {speed} mph\n\n')
         print(f'\n\nSolution: {file_counter}, Start Location: {startLoc}, Max Time: {maxTime} hrs, Speed: {speed} mph\n')
 
@@ -224,7 +224,7 @@ def print_summary(trip_pref_list, all_runtimes):
     avg_pref = sum(trip_pref_list) / len(trip_pref_list) if trip_pref_list else 0
     min_pref = min(trip_pref_list)
 
-    with open(f"proj3/resultFile3.csv", "a") as f:
+    with open(f"proj4/resultFile.csv", "a") as f:
         f.write(f'Summary File\n\n')
         f.write(f'Average instrumented runtime of all continuations of the search: {avg_runtime} seconds\n\n')
         f.write(f'Maximum Total Trip Preference found across all solution paths: {max_pref}\n\n')
@@ -297,7 +297,7 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
     file_counter = 1
 
     # clear/create new resultFile.csv
-    with open("proj3/resultFile3.csv", "w") as f:
+    with open("proj4/resultFile.csv", "w") as f:
         f.write("")
 
     start_time = time.time()
@@ -325,7 +325,7 @@ def RoundTripRoadTrip(startLoc, locFile, edgeFile, maxTime, x_mph, resultFile):
             total_pref = total_preference(curr_roadtrip)
             all_trip_prefs.append(total_pref)
 
-            with open(f"proj3/resultFile3.csv", "a") as f: 
+            with open(f"proj3/resultFile.csv", "a") as f: 
                 f.write(f'Start Location: {startLoc}, Total Trip Preference: {total_pref} , Total Trip Distance: {total_distance} miles, Total Trip Time: {time_estimate(curr_roadtrip, x_mph)} hrs\n\n\n\n')
             print(f'Start Location: {startLoc}, Total Trip Preference: {total_pref} , Total Trip Distance: {total_distance} miles, Total Trip Time: {time_estimate(curr_roadtrip, x_mph)} hrs\n\n\n\n')
 
@@ -399,7 +399,7 @@ def generate_utilities():
 
 
 def main(): 
-    RoundTripRoadTrip("BaltimoreMD", "proj3/road_network_locs.csv", "proj3/road_network_edges.csv", 200, 50, "result.csv")
+    RoundTripRoadTrip("HartfordCT", "proj4/road_network_locs.csv", "proj4/road_network_edges.csv", 200, 50, "result.csv")
 
     ''' 
     random test 

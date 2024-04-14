@@ -66,7 +66,7 @@ tree = Node(
                 ),
                 false_branch=Node(value=0.8 + 0.1)  # park, walking, history, no music
             ),
-            false_branch=Node(value=0.8)  # park, walking, no history
+            false_branch=Node(value=0.7)  # park, walking, no history
         ),
         false_branch=Node(value=0.4)  # park, no walking
     ),
