@@ -1,0 +1,51 @@
+Solution: 1, Start Location: BaltimoreMD, Max Time: 200 hrs, Speed: 50 mph
+
+1. BaltimoreMD, OceanCityMD, BaltimoreMD_tofrom_OceanCityMD, 0.026447274214909125, 2.94, 10.3, 103.0 
+
+2. OceanCityMD, BaltimoreMD, BaltimoreMD_tofrom_OceanCityMD, 0.026447274214909125, 2.94, 10.2, 102.0 
+
+Start Location: BaltimoreMD, Total Trip Preference: 20.55289454842982 , Total Trip Distance: 294.0 miles, Total Trip Time: 108.40894548429819 hrs
+
+
+
+Solution: 2, Start Location: BaltimoreMD, Max Time: 200 hrs, Speed: 50 mph
+
+1. BaltimoreMD, OceanCityMD, BaltimoreMD_tofrom_OceanCityMD, 0.026447274214909125, 2.94, 10.3, 103.0 
+
+2. OceanCityMD, PhiladelphiaPA, PhiladelphiaPA_tofrom_OceanCityMD, 0.00947546629890188, 3.04, 0.7, 7.0 
+
+3. PhiladelphiaPA, BaltimoreMD, PhiladelphiaPA_tofrom_BaltimoreMD, 0.029619692843162983, 2.02, 10.2, 102.0 
+
+Start Location: BaltimoreMD, Total Trip Preference: 21.265542433356973 , Total Trip Distance: 400.0 miles, Total Trip Time: 110.65542433356974 hrs
+
+
+
+Solution: 3, Start Location: BaltimoreMD, Max Time: 200 hrs, Speed: 50 mph
+
+1. BaltimoreMD, OceanCityMD, BaltimoreMD_tofrom_OceanCityMD, 0.026447274214909125, 2.94, 10.3, 103.0 
+
+2. OceanCityMD, PhiladelphiaPA, PhiladelphiaPA_tofrom_OceanCityMD, 0.00947546629890188, 3.04, 0.7, 7.0 
+
+3. PhiladelphiaPA, AllentownPA, AllentownPA_tofrom_PhiladelphiaPA, 0.024249709352219807, 1.276, 0.1, 1.0 
+
+4. AllentownPA, ScrantonPA, ScrantonPA_tofrom_AllentownPA, 0.08720727657078625, 1.5219999999999998, 0.1, 1.0 
+
+5. ScrantonPA, AllentownPA, ScrantonPA_tofrom_AllentownPA, 0.08720727657078625, 1.5219999999999998, 0.1, 1.0 
+
+6. AllentownPA, HarrisburgPA, AllentownPA_tofrom_HarrisburgPA, 0.053529431904565244, 1.68, 0.1, 1.0 
+
+7. HarrisburgPA, BaltimoreMD, BaltimoreMD_tofrom_HarrisburgPA, 0.0727947309119124, 1.584, 10.2, 102.0 
+
+Start Location: BaltimoreMD, Total Trip Preference: 21.86091116582408 , Total Trip Distance: 678.2 miles, Total Trip Time: 119.17311165824081 hrs
+
+
+
+Summary File
+
+Average instrumented runtime of all continuations of the search: 0.0035364627838134766 seconds
+
+Maximum Total Trip Preference found across all solution paths: 21.86091116582408
+
+Average Total Trip Preference found across all solution paths: 21.226449382536956
+
+Minimum Total Trip Preference found across all solution paths: 20.55289454842982
